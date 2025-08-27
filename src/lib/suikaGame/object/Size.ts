@@ -1,5 +1,5 @@
 export const getRenderHeight = () => {
-    const maxHeight = Math.min(window.innerHeight - 80, 700);
+    const maxHeight = Math.min(window.innerHeight - 60, 800);
     const screenHeight = window.innerHeight;
     const screenWidth = window.innerWidth - 8;
     const maxWidth = screenHeight * 4 / 7 - 8;
