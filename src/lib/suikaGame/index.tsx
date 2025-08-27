@@ -14,7 +14,7 @@ const SuikaGame = () => {
   const [bestScore, setBestScore] = useState(0);
   const [score, setScore] = useState(0);
   const [nextItem, setNextItem] = useState<Fruit>(getRandomFruitFeature()?.label as Fruit);
-  const [isStart, setIsStart] = useState<boolean>(false);
+  const [isStart, setIsStart] = useState<boolean>(true);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
 
   const { clear } = useMatterJS({ score, setScore, nextItem, setNextItem, isGameOver, setIsGameOver });
@@ -40,13 +40,9 @@ const SuikaGame = () => {
     clear();
   }
 
-  const handleGameStart = () => {
-    setIsStart(true);
-  }
-
   return (
     <div className={cx('gameArea')}>
-      <div className={cx('gameWrap')} style={{ visibility: isStart ? 'visible' : 'hidden'}}>
+      <div className={cx('gameWrap')}>
         <Advertisement />
         <div className={cx('canvasArea')}>
           <Header bestScore={bestScore} score={score} nextItem={nextItem}/>
@@ -54,7 +50,6 @@ const SuikaGame = () => {
         </div>
       </div>
 
-      <Intro isVisible={!isStart} handleGameStart={handleGameStart}/>
       <GameOverModal isVisible={isGameOver} onClick={handleTryAgain} score={score} />
     </div>
   )
