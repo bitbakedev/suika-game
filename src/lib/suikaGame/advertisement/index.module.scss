@@ -1,7 +1,7 @@
 .adContainer {
   width: 100%;
-  max-width: 728px;
-  height: 90px;
+  max-width: 364px;
+  height: 45px;
   margin: 0 auto 16px auto;
   background: #f0f0f0;
   border: 1px solid #ddd;
@@ -29,8 +29,8 @@
 
   // 모바일 대응
   @media (max-width: 768px) {
-    max-width: 320px;
-    height: 50px;
+    max-width: 160px;
+    height: 25px;
     margin-bottom: 12px;
 
     .adPlaceholder {
@@ -40,8 +40,8 @@
 
   // 태블릿 대응
   @media (min-width: 769px) and (max-width: 1024px) {
-    max-width: 468px;
-    height: 60px;
+    max-width: 234px;
+    height: 30px;
     margin-bottom: 14px;
   }
 }
