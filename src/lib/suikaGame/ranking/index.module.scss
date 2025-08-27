@@ -33,15 +33,39 @@
   margin-bottom: 25px;
   border-bottom: 2px solid rgba(255, 255, 255, 0.2);
   padding-bottom: 15px;
+  position: relative;
 
   .title {
     font-size: 2.2em;
     font-weight: 700;
     margin: 0;
     color: #fff;
+    flex: 1;
+    text-align: center;
+  }
+
+  .backBtn {
+    position: absolute;
+    left: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 1.1em;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateX(-2px);
+    }
   }
 
   .closeBtn {
+    position: absolute;
+    right: 0;
     background: rgba(255, 255, 255, 0.2);
     border: none;
     color: white;

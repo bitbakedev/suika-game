@@ -84,6 +84,7 @@ const Ranking = ({ isVisible, onClose, currentScore }: RankingProps) => {
       <div className={cx('rankingModal')}>
         <div className={cx('header')}>
           <h2 className={cx('title')}>🏆 점수 랭킹</h2>
+          <button className={cx('backBtn')} onClick={onClose}>← 뒤로가기</button>
           <button className={cx('closeBtn')} onClick={onClose}>✕</button>
         </div>
 
