@@ -54,12 +54,12 @@ const SuikaGame = () => {
   return (
     <div className={cx('gameArea')}>
       <div className={cx('gameWrap')}>
-        <Advertisement />
         <div className={cx('canvasArea')}>
           <BackButton />
           <Header bestScore={bestScore} score={score} nextItem={nextItem}/>
           <div id={'canvasWrap'} className={cx('canvasWrap')}/>
         </div>
+        <Advertisement />
       </div>
 
       <GameOverModal 
