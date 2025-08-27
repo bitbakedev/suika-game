@@ -36,6 +36,25 @@
     border-radius: 36px;
     cursor: pointer;
   }
+
+  .rankingBtn {
+    padding: .4em .6em;
+    margin-top: .4em;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    
+    font-family: 'Patrick Hand', 'Pretendard';
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #fff;
+    border-radius: 36px;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
   
   .linkArea {
     position: fixed;

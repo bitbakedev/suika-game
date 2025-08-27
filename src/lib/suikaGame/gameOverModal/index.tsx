@@ -8,11 +8,12 @@ interface GameOverModalProps {
   isVisible: boolean;
   onClick: () => void;
   score: number;
+  onShowRanking: () => void;
 }
 
 let timeout: NodeJS.Timeout | null = null;
 
-const GameOverModal = ({ isVisible, onClick, score }: GameOverModalProps) => {
+const GameOverModal = ({ isVisible, onClick, score, onShowRanking }: GameOverModalProps) => {
   const [toastVisible, setToastVisible] = useState(false);
 
   if (!isVisible) return null;
@@ -56,6 +57,7 @@ const GameOverModal = ({ isVisible, onClick, score }: GameOverModalProps) => {
       <span className={cx('text')}>GAME OVER</span>
       <span className={cx('score')}>SCORE: {score}</span>
       <button className={cx('btn')} onClick={onClick}>↻ TRY AGAIN?</button>
+      <button className={cx('rankingBtn')} onClick={onShowRanking}>🏆 랭킹 보기</button>
       <div className={cx('linkArea')}>
         <a href={'https://forms.gle/QbPDG6rzT4spywyf6'} target='_blank' className={cx('formsLink')}>의견 남기기</a>
         <button className={cx('shareaBtn')} onClick={share}>공유하기</button>

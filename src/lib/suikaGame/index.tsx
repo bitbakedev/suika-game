@@ -7,6 +7,7 @@ import GameOverModal from './gameOverModal';
 import Intro from './intro';
 import Header from './header';
 import Advertisement from './advertisement';
+import Ranking from './ranking';
 
 const cx = classNames.bind(styles);
 
@@ -16,6 +17,7 @@ const SuikaGame = () => {
   const [nextItem, setNextItem] = useState<Fruit>(getRandomFruitFeature()?.label as Fruit);
   const [isStart, setIsStart] = useState<boolean>(true);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const [showRanking, setShowRanking] = useState<boolean>(false);
 
   const { clear } = useMatterJS({ score, setScore, nextItem, setNextItem, isGameOver, setIsGameOver });
 
@@ -37,9 +39,17 @@ const SuikaGame = () => {
     setScore(0);
     setNextItem(getRandomFruitFeature()?.label as Fruit);
     setIsGameOver(false);
+    setShowRanking(false);
     clear();
   }
 
+  const handleShowRanking = () => {
+    setShowRanking(true);
+  }
+
+  const handleCloseRanking = () => {
+    setShowRanking(false);
+  }
   return (
     <div className={cx('gameArea')}>
       <div className={cx('gameWrap')}>
@@ -50,7 +60,17 @@ const SuikaGame = () => {
         </div>
       </div>
 
-      <GameOverModal isVisible={isGameOver} onClick={handleTryAgain} score={score} />
+      <GameOverModal 
+        isVisible={isGameOver && !showRanking} 
+        onClick={handleTryAgain} 
+        score={score} 
+        onShowRanking={handleShowRanking}
+      />
+      <Ranking 
+        isVisible={showRanking} 
+        onClose={handleCloseRanking} 
+        currentScore={score}
+      />
     </div>
   )
 }
