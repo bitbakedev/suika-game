@@ -19,6 +19,7 @@ const SuikaGame = () => {
   const [isStart, setIsStart] = useState<boolean>(true);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [showRanking, setShowRanking] = useState<boolean>(false);
+  const [showRankingFromBack, setShowRankingFromBack] = useState<boolean>(false);
 
   const { clear } = useMatterJS({ score, setScore, nextItem, setNextItem, isGameOver, setIsGameOver });
 
@@ -50,12 +51,17 @@ const SuikaGame = () => {
 
   const handleCloseRanking = () => {
     setShowRanking(false);
+    setShowRankingFromBack(false);
   }
   return (
+  const handleBackButtonClick = () => {
+    setShowRankingFromBack(true);
+  }
+
     <div className={cx('gameArea')}>
       <div className={cx('gameWrap')}>
         <div className={cx('canvasArea')}>
-          <BackButton />
+          <BackButton onClick={handleBackButtonClick} />
           <Header bestScore={bestScore} score={score} nextItem={nextItem}/>
           <div id={'canvasWrap'} className={cx('canvasWrap')}/>
         </div>
@@ -69,7 +75,7 @@ const SuikaGame = () => {
         onShowRanking={handleShowRanking}
       />
       <Ranking 
-        isVisible={showRanking} 
+        isVisible={showRanking || showRankingFromBack} 
         onClose={handleCloseRanking} 
         currentScore={score}
       />
