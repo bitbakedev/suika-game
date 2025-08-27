@@ -12,7 +12,7 @@ interface AdvertisementProps {
 }
 
 const Advertisement = ({ 
-  adSlot = "your-ad-slot-id", 
+  adSlot = "1234567890",
   adClient = "ca-pub-6671588871176014",
   adFormat = "auto",
   responsive = true 
