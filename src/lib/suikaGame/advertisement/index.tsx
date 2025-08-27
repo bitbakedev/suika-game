@@ -20,14 +20,18 @@ const Advertisement = ({
   const adRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Google AdSense 스크립트가 로드되었는지 확인
-    if (typeof window !== 'undefined' && (window as any).adsbygoogle) {
-      try {
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
-      } catch (error) {
-        console.error('AdSense error:', error);
+    // Google AdSense 스크립트가 로드되었는지 확인하고 지연 후 실행
+    const timer = setTimeout(() => {
+      if (typeof window !== 'undefined' && (window as any).adsbygoogle) {
+        try {
+          ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+        } catch (error) {
+          console.error('AdSense error:', error);
+        }
       }
-    }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
