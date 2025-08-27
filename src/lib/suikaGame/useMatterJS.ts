@@ -258,6 +258,7 @@ interface UseMatterJSProps {
   setNextItem: React.Dispatch<SetStateAction<Fruit>>;
   isGameOver: boolean;
   setIsGameOver: React.Dispatch<SetStateAction<boolean>>;
+  canContinue?: boolean;
 }
 
 const useMatterJS = (props: UseMatterJSProps) => {
@@ -281,8 +282,30 @@ const useMatterJS = (props: UseMatterJSProps) => {
     run();
   }
 
+  const removeOverflowFruits = () => {
+    // 게임 오버 라인 위에 있는 과일들을 제거
+    const gameOverY = getRenderHeight() / 6.5 - 30;
+    const bodiesToRemove = engine.world.bodies.filter(body => 
+      !body.isStatic && 
+      !body.isSensor && 
+      body.position.y < gameOverY &&
+      body.label !== 'GUIDE_LINE' &&
+      body.label !== 'GAME_OVER_LINE' &&
+      body.label !== 'GAME_OVER_GUIDE_LINE' &&
+      !body.label.includes('WALL')
+    );
+    
+    bodiesToRemove.forEach(body => {
+      World.remove(engine.world, body);
+    });
+    
+    // 새로운 고정 아이템 생성
+    createFixedItem(props);
+  }
+
   return {
-    clear
+    clear,
+    removeOverflowFruits
   }
 };
 

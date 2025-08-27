@@ -20,8 +20,9 @@ const SuikaGame = () => {
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [showRanking, setShowRanking] = useState<boolean>(false);
   const [showRankingFromBack, setShowRankingFromBack] = useState<boolean>(false);
+  const [canContinue, setCanContinue] = useState<boolean>(false);
 
-  const { clear } = useMatterJS({ score, setScore, nextItem, setNextItem, isGameOver, setIsGameOver });
+  const { clear, removeOverflowFruits } = useMatterJS({ score, setScore, nextItem, setNextItem, isGameOver, setIsGameOver, canContinue });
 
   useEffect(() => {
     const bestScore = localStorage.getItem('bestScore');
@@ -42,7 +43,14 @@ const SuikaGame = () => {
     setNextItem(getRandomFruitFeature()?.label as Fruit);
     setIsGameOver(false);
     setShowRanking(false);
+    setCanContinue(false);
     clear();
+  }
+
+  const handleContinueWithAd = () => {
+    setIsGameOver(false);
+    setCanContinue(true);
+    removeOverflowFruits();
   }
 
   const handleShowRanking = () => {
@@ -74,6 +82,7 @@ const SuikaGame = () => {
         onClick={handleTryAgain} 
         score={score} 
         onShowRanking={handleShowRanking}
+        onContinueWithAd={handleContinueWithAd}
       />
       <Ranking 
         isVisible={showRanking || showRankingFromBack} 
