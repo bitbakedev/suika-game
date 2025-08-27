@@ -59,7 +59,7 @@ const GameOverModal = ({ isVisible, onClick, score, onShowRanking }: GameOverMod
       <button className={cx('btn')} onClick={onClick}>↻ TRY AGAIN?</button>
       <button className={cx('rankingBtn')} onClick={onShowRanking}>🏆 랭킹 보기</button>
       <div className={cx('linkArea')}>
-        <a href={'https://forms.gle/QbPDG6rzT4spywyf6'} target='_blank' className={cx('formsLink')}>의견 남기기</a>
+        <a href={'https://forms.gle/QbPDG6rzT4spywyf6'} target='_blank' rel='noopener noreferrer' className={cx('formsLink')}>의견 남기기</a>
         <button className={cx('shareaBtn')} onClick={share}>공유하기</button>
       </div>
       <div className={cx('toastArea', { show: toastVisible })}>🍉URL이 복사되었습니다.</div>

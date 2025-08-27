@@ -29,7 +29,7 @@ const Advertisement = ({
           console.error('AdSense error:', error);
         }
       }
-    }, 100);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);
