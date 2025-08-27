@@ -1,6 +1,6 @@
 import Matter from 'matter-js';
 import { SetStateAction, useEffect } from "react";
-import Wall, { WALL_BACK } from "./object/Wall";
+import Wall from "./object/Wall";
 import { Fruit, getFruitFeature, getNextFruitFeature, getRandomFruitFeature } from "./object/Fruit";
 import { getRenderHeight, getRenderWidth } from "./object/Size";
 import { GameOverLine, GameOverGuideLine } from './object/GameOverLine';
@@ -271,7 +271,7 @@ const useMatterJS = (props: UseMatterJSProps) => {
     return (() => {
       props.setScore(0);
     })
-  }, []);
+  }, [props, fireConfetti, fireRapidStarConfetti]);
 
   const clear = () => {
     fixedItem = null;

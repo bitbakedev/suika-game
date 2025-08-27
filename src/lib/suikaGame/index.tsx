@@ -53,10 +53,11 @@ const SuikaGame = () => {
     setShowRanking(false);
     setShowRankingFromBack(false);
   }
-  return (
+
   const handleBackButtonClick = () => {
     setShowRankingFromBack(true);
   }
+
 
     <div className={cx('gameArea')}>
       <div className={cx('gameWrap')}>
