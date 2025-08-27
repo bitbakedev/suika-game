@@ -8,6 +8,7 @@ import Intro from './intro';
 import Header from './header';
 import Advertisement from './advertisement';
 import Ranking from './ranking';
+import BackButton from './backButton';
 
 const cx = classNames.bind(styles);
 
@@ -55,6 +56,7 @@ const SuikaGame = () => {
       <div className={cx('gameWrap')}>
         <Advertisement />
         <div className={cx('canvasArea')}>
+          <BackButton />
           <Header bestScore={bestScore} score={score} nextItem={nextItem}/>
           <div id={'canvasWrap'} className={cx('canvasWrap')}/>
         </div>
