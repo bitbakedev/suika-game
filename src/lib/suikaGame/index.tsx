@@ -6,6 +6,7 @@ import { Fruit, getRandomFruitFeature } from './object/Fruit';
 import GameOverModal from './gameOverModal';
 import Intro from './intro';
 import Header from './header';
+import Advertisement from './advertisement';
 
 const cx = classNames.bind(styles);
 
@@ -46,6 +47,7 @@ const SuikaGame = () => {
   return (
     <div className={cx('gameArea')}>
       <div className={cx('gameWrap')} style={{ visibility: isStart ? 'visible' : 'hidden'}}>
+        <Advertisement />
         <div className={cx('canvasArea')}>
           <Header bestScore={bestScore} score={score} nextItem={nextItem}/>
           <div id={'canvasWrap'} className={cx('canvasWrap')}/>
