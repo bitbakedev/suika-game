@@ -7,8 +7,10 @@ interface UseMatterJSProps {
     setNextItem: React.Dispatch<SetStateAction<Fruit>>;
     isGameOver: boolean;
     setIsGameOver: React.Dispatch<SetStateAction<boolean>>;
+    canContinue?: boolean;
 }
 declare const useMatterJS: (props: UseMatterJSProps) => {
     clear: () => void;
+    removeOverflowFruits: () => void;
 };
 export default useMatterJS;
