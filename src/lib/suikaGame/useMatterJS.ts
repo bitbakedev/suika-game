@@ -25,7 +25,7 @@ const renderOptions = {
   width: getRenderWidth(),
   height: getRenderHeight(),
   wireframes: false,
-  background: '#ffffff',
+  background: '#ffffff40',
   borderRadius: '16px',
   pixelRatio: window.devicePixelRatio || 2,
   showAngleIndicator: false,
