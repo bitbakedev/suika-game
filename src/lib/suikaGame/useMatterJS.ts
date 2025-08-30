@@ -56,7 +56,7 @@ const init = (propsRef: React.RefObject<UseMatterJSProps>) => {
     }
   });
   World.add(engine.world, [...Wall]);
-  World.add(engine.world, [GameOverGuideLine, GuideLine]);
+  World.add(engine.world, [GameOverGuideLine, ...GuideLine]);
   nextFruit = propsRef.current?.nextItem || null;
   createFixedItem(propsRef);
 };
@@ -110,10 +110,14 @@ const setPositionFixedItem = (event: any) => {
     x: clamp(event.mouse.position.x, minX, maxX),
     y: fixedItem.position.y,
   });
-  Matter.Body.setPosition(GuideLine, {
-    x: clamp(event.mouse.position.x, minX, maxX),
-    y: GuideLine.position.y,
-  })
+  
+  // 모든 대시 라인들의 위치 업데이트
+  GuideLine.forEach(dash => {
+    Matter.Body.setPosition(dash, {
+      x: clamp(event.mouse.position.x, minX, maxX),
+      y: dash.position.y,
+    });
+  });
 }
 
 const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfetti: () => void, fireRapidStarConfetti: () => void }) => {
@@ -173,14 +177,20 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
 
     prevPosition.x = fixedItem.position.x;
 
-    GuideLine.render.fillStyle = 'transparent';
+    // 모든 대시 라인들을 투명하게 만들기
+    GuideLine.forEach(dash => {
+      dash.render.fillStyle = 'transparent';
+    });
     World.remove(engine.world, fixedItem);
     World.remove(engine.world, GameOverLine);
     fixedItem = null;
     World.add(engine.world, newItem);
 
     fixedItemTimeOut = setTimeout(() => {
-      GuideLine.render.fillStyle = 'transparent';
+      // 모든 대시 라인들을 다시 보이게 만들기
+      GuideLine.forEach(dash => {
+        dash.render.fillStyle = GuideLineColor;
+      });
       GuideLine.render.strokeStyle = '#ffffff80';
       World.add(engine.world, GameOverLine);
       createFixedItem(propsRef);
