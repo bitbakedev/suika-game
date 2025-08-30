@@ -44,6 +44,30 @@
       transform: scale(1.1);
     }
   }
+
+  .restartButton {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 1);
+      transform: scale(1.1);
+    }
+  }
 }
 
 .canvasArea {

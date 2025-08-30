@@ -48,6 +48,9 @@ const SuikaGame = () => {
         <button className={cx('closeButton')} onClick={handleClose}>
           ×
         </button>
+        <button className={cx('restartButton')} onClick={handleTryAgain}>
+          ↻
+        </button>
         <div className={cx('canvasArea')}>
           <Header bestScore={bestScore} score={score} nextItem={nextItem}/>
           <div id={'canvasWrap'} className={cx('canvasWrap')}/>
