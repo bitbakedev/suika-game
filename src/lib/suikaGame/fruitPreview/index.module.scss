@@ -13,7 +13,7 @@
 .previewWrap {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 4px;
   height: 100%;
   padding: 0 20px;
@@ -21,6 +21,28 @@
   
   &::-webkit-scrollbar {
     display: none;
+  }
+}
+
+.settingsButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(139, 69, 19, 0.8);
+  color: #fff;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  margin-right: 12px;
+  flex-shrink: 0;
+  
+  &:hover {
+    background: rgba(139, 69, 19, 1);
+    transform: scale(1.05);
   }
 }
 

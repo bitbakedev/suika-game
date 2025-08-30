@@ -70,10 +70,6 @@ const SuikaGame = () => {
           <div id={'canvasWrap'} className={cx('canvasWrap')}/>
         </div>
       </div>
-      
-      <FruitPreview />
-
-      <GameOverModal isVisible={isGameOver} onClick={handleTryAgain} score={score} />
     </div>
   )
 }

@@ -4,12 +4,19 @@ import classNames from "classnames/bind";
 
 const cx = classNames.bind(styles);
 
-const FruitPreview = () => {
+interface FruitPreviewProps {
+  onRestart: () => void;
+}
+
+const FruitPreview = ({ onRestart }: FruitPreviewProps) => {
   const fruits = Object.values(Fruit);
 
   return (
     <div className={cx('previewArea')}>
       <div className={cx('previewWrap')}>
+        <button className={cx('settingsButton')} onClick={onRestart}>
+          ⚙️
+        </button>
         {fruits.map((fruit, index) => (
           <div 
             key={fruit} 
