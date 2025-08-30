@@ -1,7 +1,8 @@
 import confetti from 'canvas-confetti';
+import { useCallback } from 'react';
 
 const useConfetti = () => {
-  const fireConfetti = () => {
+  const fireConfetti = useCallback(() => {
     const count = 200;
     const defaults = {
       origin: { y: 1 },
@@ -38,9 +39,9 @@ const useConfetti = () => {
       spread: 90,
       startVelocity: 75,
     });
-  };
+  }, []);
 
-  const fireRapidStarConfetti = () => {
+  const fireRapidStarConfetti = useCallback(() => {
     const end = Date.now() + (5 * 1000);
     const colors = ['#bb0000', '#ffffff'];
 
@@ -64,7 +65,7 @@ const useConfetti = () => {
         requestAnimationFrame(frame);
       }
     }());
-  }
+  }, []);
 
   return {
     fireConfetti,
