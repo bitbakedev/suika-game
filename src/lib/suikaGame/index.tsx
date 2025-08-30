@@ -4,7 +4,6 @@ import classNames from "classnames/bind";
 import useMatterJS from "./useMatterJS";
 import { Fruit, getRandomFruitFeature } from './object/Fruit';
 import GameOverModal from './gameOverModal';
-import FruitPreview from './fruitPreview';
 
 const cx = classNames.bind(styles);
 
@@ -37,9 +36,13 @@ const SuikaGame = () => {
     clear();
   }
 
-  const handleClose = () => {
-    window.close();
+  const handleSettings = () => {
+    // 설정 메뉴 열기 (추후 구현)
+    console.log('Settings clicked');
   }
+
+  // 모든 과일 목록
+  const allFruits = Object.values(Fruit);
 
   return (
     <div className={cx('gameArea')}>
@@ -49,14 +52,9 @@ const SuikaGame = () => {
           <span className={cx('score')}>{score > bestScore ? score : bestScore}</span>
         </div>
         
-        <button className={cx('closeButton')} onClick={handleClose}>
-          ×
+        <button className={cx('settingsButton')} onClick={handleSettings}>
+          ⚙️
         </button>
-        
-        <div className={cx('nextArea')}>
-          <div className={cx('nextFruit')} style={{ backgroundImage: `url(${require('../../resource/' + nextItem + '.png')})` }} />
-          <span className={cx('nextText')}>NEXT</span>
-        </div>
       </div>
       
       <div className={cx('gameWrap')}>
@@ -65,7 +63,18 @@ const SuikaGame = () => {
         </div>
       </div>
 
-      <FruitPreview onRestart={handleTryAgain} />
+      <div className={cx('bottomArea')}>
+        {allFruits.map((fruit, index) => (
+          <div 
+            key={fruit} 
+            className={cx('fruitItem')}
+            style={{ 
+              backgroundImage: `url(${require('../../resource/' + fruit + '.png')})`,
+              animationDelay: `${index * 0.1}s`
+            }}
+          />
+        ))}
+      </div>
       
       <GameOverModal isVisible={isGameOver} onClick={handleTryAgain} score={score} />
     </div>
