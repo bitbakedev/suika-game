@@ -15,10 +15,8 @@ const SuikaGame = () => {
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [itemCount, setItemCount] = useState<number>(3);
   const [isItemActive, setIsItemActive] = useState<boolean>(false);
-  const [shakeItemCount, setShakeItemCount] = useState<number>(3);
-  const [isShakeItemActive, setIsShakeItemActive] = useState<boolean>(false);
 
-  const { clear, removeSmallFruits, shakeCanvas } = useMatterJS({ 
+  const { clear, removeSmallFruits } = useMatterJS({ 
     score, 
     setScore, 
     nextItem, 
@@ -47,8 +45,6 @@ const SuikaGame = () => {
     setIsGameOver(false);
     setItemCount(3);
     setIsItemActive(false);
-    setShakeItemCount(3);
-    setIsShakeItemActive(false);
     clear();
   }
 
@@ -65,19 +61,6 @@ const SuikaGame = () => {
       // 이펙트 애니메이션
       setTimeout(() => {
         setIsItemActive(false);
-      }, 600);
-    }
-  }
-
-  const handleShakeItem = () => {
-    if (shakeItemCount > 0 && !isGameOver) {
-      setShakeItemCount(prev => prev - 1);
-      setIsShakeItemActive(true);
-      shakeCanvas();
-      
-      // 이펙트 애니메이션
-      setTimeout(() => {
-        setIsShakeItemActive(false);
       }, 600);
     }
   }
@@ -111,29 +94,20 @@ const SuikaGame = () => {
         </div>
         
         <div className={cx('rightSection')}>
-          <div 
-            className={cx('shakeItemCircle', { active: isShakeItemActive })} 
-            onClick={handleShakeItem}
-            title={`흔들기 아이템 사용 (${shakeItemCount}개 남음)`}
-          >
-            {shakeItemCount}
-          </div>
-          <div className={cx('nextFruitSection')}>
-            <div className={cx('nextFruit')} style={{ backgroundImage: `url(${require('../../resource/' + nextItem + '.png')})` }} />
-            <div className={cx('nextText')}>NEXT</div>
-          </div>
-        </div>
-        <div 
-          className={cx('shakeItemCircle', { active: isShakeItemActive })} 
-          onClick={handleShakeItem}
-          title={`흔들기 아이템 사용 (${shakeItemCount}개 남음)`}
-        >
-          {shakeItemCount}
+          <div className={cx('nextFruit')} style={{ backgroundImage: `url(${require('../../resource/' + nextItem + '.png')})` }} />
+          <div className={cx('nextText')}>NEXT</div>
         </div>
       </div>
       
       <button className={cx('closeButton')} onClick={handleClose}>
+        ×
       </button>
+      
+      <div className={cx('gameWrap')}>
+        <div className={cx('canvasArea')}>
+          <div id={'canvasWrap'} className={cx('canvasWrap')}/>
+        </div>
+      </div>
 
       <FruitPreview onRestart={handleTryAgain} />
       
