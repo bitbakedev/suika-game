@@ -51,8 +51,11 @@ const SuikaGame = () => {
         </div>
         
         <div className={cx('centerSection')}>
-          <div className={cx('crownIcon')}>👑</div>
           <div className={cx('mainScore')}>{score}</div>
+          <div className={cx('bestScoreRow')}>
+            <div className={cx('crownIcon')}>👑</div>
+            <div className={cx('bestScoreText')}>BEST: {score > bestScore ? score : bestScore}</div>
+          </div>
         </div>
         
         <div className={cx('rightSection')}>
