@@ -10,5 +10,7 @@ interface UseMatterJSProps {
 }
 declare const useMatterJS: (props: UseMatterJSProps) => {
     clear: () => void;
+    removeSmallFruits: () => void;
+    shakeCanvas: () => void;
 };
 export default useMatterJS;

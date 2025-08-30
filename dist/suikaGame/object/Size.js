@@ -1,13 +1,13 @@
-export var getRenderHeight = function () {
-    var maxHeight = Math.min(window.innerHeight - 80, 700);
-    var screenHeight = window.innerHeight;
-    var screenWidth = window.innerWidth - 8;
-    var maxWidth = screenHeight * 4 / 7 - 8;
+export const getRenderHeight = () => {
+    const maxHeight = window.innerHeight - 220; // 상단 120px + 하단 100px
+    const screenHeight = window.innerHeight;
+    const screenWidth = window.innerWidth - 40; // 좌우 여백 20px씩
+    const maxWidth = screenHeight * 4 / 7 - 8;
     if (maxWidth > screenWidth) {
-        return Math.min(maxHeight, (screenWidth) * 7 / 4);
+        return maxHeight;
     }
-    return Math.min(maxHeight, screenHeight);
+    return maxHeight;
 };
-export var getRenderWidth = function () {
-    return getRenderHeight() * 4 / 7;
+export const getRenderWidth = () => {
+    return Math.min(window.innerWidth - 40, getRenderHeight() * 4 / 7); // 좌우 여백 20px씩
 };

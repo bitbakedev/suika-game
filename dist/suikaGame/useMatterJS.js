@@ -1,63 +1,63 @@
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 import Matter from 'matter-js';
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Wall from "./object/Wall";
 import { Fruit, getFruitFeature, getNextFruitFeature, getRandomFruitFeature } from "./object/Fruit";
 import { getRenderHeight, getRenderWidth } from "./object/Size";
 import { GameOverLine, GameOverGuideLine } from './object/GameOverLine';
 import { GuideLine, GuideLineColor } from './object/GuideLine';
 import useConfetti from "./useConfetti";
-var Engine = Matter.Engine, Render = Matter.Render, World = Matter.World, Mouse = Matter.Mouse, MouseConstraint = Matter.MouseConstraint;
-var frameInterval = 1000 / 60; // 60fps
-var getImgUrl = function (fruit) { return require('../../resource/' + fruit + '.png'); };
-var engine = Engine.create();
-var render = null;
-var requestAnimation = null;
-var lastTime = 0;
-var fixedItemTimeOut = null;
-var fixedItem = null; // 고정된 아이템
-var prevPosition = { x: getRenderWidth() / 2, y: 50 };
-var nextFruit = null;
-var prevMergingFruitIds = [];
-var renderOptions = {
+const { Engine, Render, World, Mouse, MouseConstraint } = Matter;
+const frameInterval = 1000 / 60; // 60fps
+const getImgUrl = (fruit) => require('../../resource/' + fruit + '.png');
+let engine = Engine.create();
+let render = null;
+let requestAnimation = null;
+let lastTime = 0;
+let fixedItemTimeOut = null;
+let fixedItem = null; // 고정된 아이템
+let prevPosition = { x: getRenderWidth() / 2, y: 50 };
+let nextFruit = null;
+let prevMergingFruitIds = [];
+const renderOptions = {
     width: getRenderWidth(),
     height: getRenderHeight(),
     wireframes: false,
     background: '#ffffff40',
     borderRadius: '16px',
+    pixelRatio: window.devicePixelRatio || 2,
+    showAngleIndicator: false,
+    showVelocity: false,
 };
-var init = function (props) {
-    var canvasWrapEl = document.getElementById('canvasWrap');
+const init = (propsRef) => {
+    var _a;
+    const canvasWrapEl = document.getElementById('canvasWrap');
     if (!canvasWrapEl)
         return;
     while (canvasWrapEl.hasChildNodes() && canvasWrapEl.firstChild)
         canvasWrapEl.removeChild(canvasWrapEl.firstChild);
-    engine.world.gravity.y = 2.0;
-    render = Render.create({ element: canvasWrapEl, engine: engine, options: renderOptions });
-    World.add(engine.world, __spreadArray([], Wall, true));
+    engine.world.gravity.y = 1.5;
+    render = Render.create({
+        element: canvasWrapEl,
+        engine: engine,
+        options: Object.assign(Object.assign({}, renderOptions), { showDebug: false, showBroadphase: false, showBounds: false, showVelocity: false, showAngleIndicator: false, showSeparations: false, showAxes: false, showPositions: false, showConvexHulls: false, showInternalEdges: false, showMousePosition: false })
+    });
+    World.add(engine.world, [...Wall]);
     World.add(engine.world, [GameOverGuideLine, GuideLine]);
-    nextFruit = props.nextItem;
-    createFixedItem(props);
+    nextFruit = ((_a = propsRef.current) === null || _a === void 0 ? void 0 : _a.nextItem) || null;
+    createFixedItem(propsRef);
 };
-var createFixedItem = function (_a) {
-    var _b;
-    var setNextItem = _a.setNextItem;
+const createFixedItem = (propsRef) => {
+    var _a;
     if (fixedItem)
         return;
     if (!nextFruit)
         return;
-    var feature = getFruitFeature(nextFruit);
-    var label = feature === null || feature === void 0 ? void 0 : feature.label;
-    var radius = (feature === null || feature === void 0 ? void 0 : feature.radius) || 1;
-    var mass = (feature === null || feature === void 0 ? void 0 : feature.mass) || 1;
+    if (!propsRef.current)
+        return;
+    const feature = getFruitFeature(nextFruit);
+    const label = feature === null || feature === void 0 ? void 0 : feature.label;
+    const radius = (feature === null || feature === void 0 ? void 0 : feature.radius) || 1;
+    const mass = (feature === null || feature === void 0 ? void 0 : feature.mass) || 1;
     fixedItem = Matter.Bodies.circle(prevPosition.x, prevPosition.y, radius, {
         isStatic: true,
         isSensor: true,
@@ -74,22 +74,24 @@ var createFixedItem = function (_a) {
         }
     });
     World.add(engine.world, fixedItem);
-    var newNextItem = (_b = getRandomFruitFeature()) === null || _b === void 0 ? void 0 : _b.label;
+    const newNextItem = (_a = getRandomFruitFeature()) === null || _a === void 0 ? void 0 : _a.label;
     nextFruit = newNextItem;
-    setNextItem(newNextItem);
+    propsRef.current.setNextItem(newNextItem);
 };
-var handleGameOver = function (props) {
-    props.setIsGameOver(true);
+const handleGameOver = (propsRef) => {
+    if (!propsRef.current)
+        return;
+    propsRef.current.setIsGameOver(true);
     requestAnimation && cancelAnimationFrame(requestAnimation);
 };
-var clamp = function (value, min, max) {
+const clamp = (value, min, max) => {
     return Math.min(Math.max(value, min), max);
 };
-var setPositionFixedItem = function (event) {
+const setPositionFixedItem = (event) => {
     if (!fixedItem)
         return;
-    var minX = fixedItem.circleRadius ? fixedItem.circleRadius : 0;
-    var maxX = fixedItem.circleRadius ? getRenderWidth() - fixedItem.circleRadius : getRenderWidth();
+    const minX = fixedItem.circleRadius ? fixedItem.circleRadius : 0;
+    const maxX = fixedItem.circleRadius ? getRenderWidth() - fixedItem.circleRadius : getRenderWidth();
     Matter.Body.setPosition(fixedItem, {
         x: clamp(event.mouse.position.x, minX, maxX),
         y: fixedItem.position.y,
@@ -99,11 +101,11 @@ var setPositionFixedItem = function (event) {
         y: GuideLine.position.y,
     });
 };
-var event = function (props, effects) {
+const event = (propsRef, effects) => {
     if (!render)
         return;
-    var mouse = Mouse.create(render.canvas);
-    var mouseConstraint = MouseConstraint.create(engine, {
+    const mouse = Mouse.create(render.canvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
         mouse: mouse,
         constraint: {
             stiffness: 1,
@@ -113,7 +115,7 @@ var event = function (props, effects) {
         }
     });
     // 마우스 버튼 누르면 원 이동 시작
-    Matter.Events.on(mouseConstraint, 'startdrag', function (event) {
+    Matter.Events.on(mouseConstraint, 'startdrag', (event) => {
         if (!fixedItem)
             return;
         fixedItemTimeOut && clearTimeout(fixedItemTimeOut);
@@ -121,27 +123,28 @@ var event = function (props, effects) {
         setPositionFixedItem(event);
     });
     // 마우스 이동 시 원을 마우스 위치로 이동
-    Matter.Events.on(mouseConstraint, 'mousemove', function (event) {
+    Matter.Events.on(mouseConstraint, 'mousemove', (event) => {
         setPositionFixedItem(event);
     });
     // 마우스 버튼 뗄 때 원의 고정 해제
-    Matter.Events.on(mouseConstraint, 'enddrag', function (event) {
+    Matter.Events.on(mouseConstraint, 'enddrag', (event) => {
         // 원의 고정 해제
         if (!fixedItem)
             return;
         setPositionFixedItem(event);
-        var popSound = new Audio(require('../../resource/pop.mp3'));
+        const popSound = new Audio(require('../../resource/pop.mp3'));
         popSound.play();
-        var label = fixedItem === null || fixedItem === void 0 ? void 0 : fixedItem.label;
-        var feature = getFruitFeature(label);
-        var radius = (feature === null || feature === void 0 ? void 0 : feature.radius) || 1;
-        var mass = (feature === null || feature === void 0 ? void 0 : feature.mass) || 1;
-        var newItem = Matter.Bodies.circle(fixedItem.position.x, fixedItem.position.y, radius, {
+        const label = fixedItem === null || fixedItem === void 0 ? void 0 : fixedItem.label;
+        const feature = getFruitFeature(label);
+        const radius = (feature === null || feature === void 0 ? void 0 : feature.radius) || 1;
+        const mass = (feature === null || feature === void 0 ? void 0 : feature.mass) || 1;
+        const newItem = Matter.Bodies.circle(fixedItem.position.x, fixedItem.position.y, radius, {
             isStatic: false,
             label: label,
-            restitution: 0,
+            restitution: 0.1,
             mass: mass,
-            friction: 1,
+            friction: 0.8,
+            frictionAir: 0.01,
             render: {
                 sprite: {
                     texture: getImgUrl(label),
@@ -151,33 +154,33 @@ var event = function (props, effects) {
             },
         });
         prevPosition.x = fixedItem.position.x;
-        GuideLine.render.fillStyle = '#ffffff00';
+        GuideLine.render.fillStyle = 'transparent';
         World.remove(engine.world, fixedItem);
         World.remove(engine.world, GameOverLine);
         fixedItem = null;
         World.add(engine.world, newItem);
-        fixedItemTimeOut = setTimeout(function () {
+        fixedItemTimeOut = setTimeout(() => {
             GuideLine.render.fillStyle = GuideLineColor;
             World.add(engine.world, GameOverLine);
-            createFixedItem(props);
+            createFixedItem(propsRef);
         }, 750);
     });
-    Matter.Events.on(engine, 'collisionStart', function (event) {
-        var pairs = event.pairs;
-        pairs.forEach(function (pair) {
-            var bodyA = pair.bodyA;
-            var bodyB = pair.bodyB;
+    Matter.Events.on(engine, 'collisionStart', (event) => {
+        const pairs = event.pairs;
+        pairs.forEach((pair) => {
+            const bodyA = pair.bodyA;
+            const bodyB = pair.bodyB;
             if (bodyA.label === GameOverLine.label || bodyB.label === GameOverLine.label) {
-                handleGameOver(props);
+                handleGameOver(propsRef);
                 return;
             }
-            var midX = (bodyA.position.x + bodyB.position.x) / 2;
-            var midY = (bodyA.position.y + bodyB.position.y) / 2;
-            var labelA = bodyA.label;
-            var labelB = bodyB.label;
+            const midX = (bodyA.position.x + bodyB.position.x) / 2;
+            const midY = (bodyA.position.y + bodyB.position.y) / 2;
+            const labelA = bodyA.label;
+            const labelB = bodyB.label;
             if (bodyA.isSensor || bodyB.isSensor)
                 return;
-            if (labelA === Fruit.GOLDWATERMELON && labelB === Fruit.GOLDWATERMELON)
+            if (labelA === Fruit.WATERMELON && labelB === Fruit.WATERMELON)
                 return;
             // 이미 합치는 중이면 무시
             if (prevMergingFruitIds.includes(bodyA.id) || prevMergingFruitIds.includes(bodyB.id))
@@ -186,28 +189,32 @@ var event = function (props, effects) {
             if (labelA === labelB) {
                 prevMergingFruitIds = [bodyA.id, bodyB.id];
                 // 과일이 합쳐질 때 사운드 효과
-                var popSound = new Audio(require('../../resource/pop2.mp3'));
+                const popSound = new Audio(require('../../resource/pop2.mp3'));
                 popSound.play();
                 World.remove(engine.world, bodyA);
                 World.remove(engine.world, bodyB);
                 // 새로운 Fruit 생성 (크기가 한 사이즈 큰 것)
-                var feature = getNextFruitFeature(labelA); // 이 함수는 한 사이즈 큰 Fruit 특성을 반환하도록 수정
-                var label = feature === null || feature === void 0 ? void 0 : feature.label;
-                var radius = (feature === null || feature === void 0 ? void 0 : feature.radius) || 1;
-                var mass = (feature === null || feature === void 0 ? void 0 : feature.mass) || 1;
-                var score_1 = (feature === null || feature === void 0 ? void 0 : feature.score) || 0;
-                // 수박이 만들어지면 폭죽 이펙트
-                if (label === Fruit.WATERMELON)
-                    effects.fireConfetti();
-                // 황금 수박이 만들어지면 별 이펙트
-                if (label === Fruit.GOLDWATERMELON)
+                const feature = getNextFruitFeature(labelA); // 이 함수는 한 사이즈 큰 Fruit 특성을 반환하도록 수정
+                // 수박이 만들어지면 별 이펙트
+                if (labelA === Fruit.MELON)
                     effects.fireRapidStarConfetti();
-                var newFruit = Matter.Bodies.circle(midX, midY, radius, {
+                // 수박끼리 합쳐지면 더 이상 진행하지 않음
+                if (!feature)
+                    return;
+                const label = feature === null || feature === void 0 ? void 0 : feature.label;
+                const radius = (feature === null || feature === void 0 ? void 0 : feature.radius) || 1;
+                const mass = (feature === null || feature === void 0 ? void 0 : feature.mass) || 1;
+                const score = (feature === null || feature === void 0 ? void 0 : feature.score) || 0;
+                // 수박이 만들어지면 폭죽 이펙트 (멜론 2개가 합쳐져서 수박이 될 때)
+                if (labelA === Fruit.MELON && label === Fruit.WATERMELON)
+                    effects.fireConfetti();
+                const newFruit = Matter.Bodies.circle(midX, midY, radius, {
                     isStatic: false,
                     label: label,
-                    restitution: 0,
+                    restitution: 0.1,
                     mass: mass,
-                    friction: 1,
+                    friction: 0.8,
+                    frictionAir: 0.01,
                     render: {
                         sprite: {
                             texture: getImgUrl(label),
@@ -217,45 +224,104 @@ var event = function (props, effects) {
                     }
                 });
                 World.add(engine.world, newFruit);
-                props.setScore(function (prev) { return prev + score_1; });
+                if (propsRef.current) {
+                    propsRef.current.setScore(prev => prev + score);
+                }
             }
         });
     });
     // World.add(engine.world, mouseConstraint);
 };
-var animate = function (currentTime) {
+const animate = (currentTime) => {
     requestAnimation = requestAnimationFrame(animate);
-    var elapsed = currentTime - lastTime;
+    const elapsed = currentTime - lastTime;
     if (elapsed > frameInterval) {
         Engine.update(engine, frameInterval);
         lastTime = currentTime - (elapsed % frameInterval);
     }
 };
-var run = function () {
+const run = () => {
     if (!render)
         return;
     animate(0); // 시작할 때 시간을 0으로 초기화
     Render.run(render);
 };
-var useMatterJS = function (props) {
-    var _a = useConfetti(), fireConfetti = _a.fireConfetti, fireRapidStarConfetti = _a.fireRapidStarConfetti;
-    useEffect(function () {
-        init(props);
-        event(props, { fireConfetti: fireConfetti, fireRapidStarConfetti: fireRapidStarConfetti });
+const useMatterJS = (props) => {
+    const { fireConfetti, fireRapidStarConfetti } = useConfetti();
+    const propsRef = useRef(props);
+    // Update props ref on every render
+    useEffect(() => {
+        propsRef.current = props;
+    });
+    useEffect(() => {
+        init(propsRef);
+        event(propsRef, { fireConfetti, fireRapidStarConfetti });
         run();
-        return (function () {
-            props.setScore(0);
+        return (() => {
+            if (propsRef.current) {
+                propsRef.current.setScore(0);
+            }
         });
-    }, []);
-    var clear = function () {
+    }, [fireConfetti, fireRapidStarConfetti]);
+    const clear = () => {
         fixedItem = null;
         engine = Engine.create();
-        init(props);
-        event(props, { fireConfetti: fireConfetti, fireRapidStarConfetti: fireRapidStarConfetti });
+        init(propsRef);
+        event(propsRef, { fireConfetti, fireRapidStarConfetti });
         run();
     };
+    const removeSmallFruits = () => {
+        const bodiesToRemove = engine.world.bodies.filter(body => {
+            const label = body.label;
+            return label === Fruit.STRAWBERRY || label === Fruit.BLUEBERRY;
+        });
+        // 제거된 과일이 있을 때만 효과 실행
+        if (bodiesToRemove.length > 0) {
+            // 깔끔한 빵빠레 효과
+            fireConfetti();
+            // 사운드 효과
+            const popSound = new Audio(require('../../resource/pop2.mp3'));
+            popSound.volume = 0.4;
+            popSound.play();
+        }
+        World.remove(engine.world, bodiesToRemove);
+    };
+    const shakeCanvas = () => {
+        const allBodies = engine.world.bodies.filter(body => !body.isStatic && !body.isSensor && body.label !== 'GUIDE_LINE');
+        // 사운드 효과
+        const popSound = new Audio(require('../../resource/pop.mp3'));
+        popSound.volume = 0.5;
+        popSound.play();
+        // 모든 과일에 좌우 흔들림 효과 적용
+        allBodies.forEach((body, index) => {
+            const delay = index * 20; // 순차적 흔들림
+            setTimeout(() => {
+                const shakeForce = 0.06; // 적당한 힘
+                const randomDirection = Math.random() > 0.5 ? 1 : -1;
+                Matter.Body.applyForce(body, body.position, {
+                    x: shakeForce * randomDirection,
+                    y: -0.03 // 위로 튀는 힘
+                });
+            }, delay);
+        });
+        // 연속 흔들기
+        for (let i = 1; i < 8; i++) {
+            setTimeout(() => {
+                allBodies.forEach(body => {
+                    const shakeForce = 0.04 * (8 - i) / 8; // 점점 약해지는 흔들림
+                    const randomDirection = Math.random() > 0.5 ? 1 : -1;
+                    Matter.Body.applyForce(body, body.position, {
+                        x: shakeForce * randomDirection,
+                        y: Math.random() * 0.02 - 0.01 // 랜덤한 수직 움직임
+                    });
+                });
+            }, i * 120); // 간격
+        }
+    };
     return {
-        clear: clear
+        clear,
+        removeSmallFruits,
+        shakeCanvas
     };
 };
 export default useMatterJS;

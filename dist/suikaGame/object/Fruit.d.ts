@@ -9,8 +9,7 @@ export declare enum Fruit {
     PEACH = "PEACH",
     COCONUT = "COCONUT",
     MELON = "MELON",
-    WATERMELON = "WATERMELON",
-    GOLDWATERMELON = "GOLDWATERMELON"
+    WATERMELON = "WATERMELON"
 }
 export type FruitType = keyof typeof Fruit;
 export declare const getFruitFeature: (fruit: FruitType) => {
