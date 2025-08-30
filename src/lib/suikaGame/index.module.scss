@@ -215,17 +215,17 @@
   75% { transform: translateX(15px) rotate(3deg); }
   85% { transform: translateX(-10px) rotate(-2deg); }
   95% { transform: translateX(5px) rotate(1deg); }
+}
 
-  canvas {
-    border: none;
-    border-radius: 18px;
-    user-select: none;
-    cursor: pointer;
-    display: block;
-    width: 100% !important;
-    max-width: 100%;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    image-rendering: pixelated;
-  }
+.canvasWrap canvas {
+  border: none;
+  border-radius: 18px;
+  user-select: none;
+  cursor: pointer;
+  display: block;
+  width: 100% !important;
+  max-width: 100%;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
 }
