@@ -123,12 +123,9 @@ const SuikaGame = () => {
           <div className={cx('mainScore')}>{score}</div>
           <div className={cx('bestScoreRow')}>
             <div className={cx('crownIcon')}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                {/* 왕관 베이스 */}
-                <path d="M6 16h12v2c0 0.5-0.5 1-1 1H7c-0.5 0-1-0.5-1-1v-2z" fill="#955200" stroke="#ffffff" strokeWidth="1"/>
-                
-                {/* 왕관 뾰족한 부분들 */}
-                <path d="M6 16L8 10L10 14L12 8L14 14L16 10L18 16" fill="#955200" stroke="#ffffff" strokeWidth="1" strokeLinejoin="round"/>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M5 20h14v-2H5v2z" fill="#FFD700"/>
+                <path d="M5 18l2-8 3 4 2-6 2 6 3-4 2 8H5z" fill="#FFD700"/>
               </svg>
             </div>
             <div className={cx('bestScoreText')}>{score > bestScore ? score : bestScore}</div>
