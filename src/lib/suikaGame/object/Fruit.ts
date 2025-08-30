@@ -19,7 +19,7 @@ export type FruitType = keyof typeof Fruit;
 export const getFruitFeature = (fruit: FruitType) => {
   switch (fruit) {
     case Fruit.BLUEBERRY:
-      return { radius: getRenderWidth() / 24, mass: 0.8, label: Fruit.BLUEBERRY, score: 2 };
+      return { radius: getRenderWidth() / 24, mass: 1.2, label: Fruit.BLUEBERRY, score: 2 };
     case Fruit.STRAWBERRY:
       return { radius: getRenderWidth() / 18, mass: 1, label: Fruit.STRAWBERRY, score: 4 };
     case Fruit.TANGERINE:

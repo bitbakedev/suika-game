@@ -36,7 +36,7 @@ const init = (propsRef: React.RefObject<UseMatterJSProps>) => {
   const canvasWrapEl = document.getElementById('canvasWrap');
   if (!canvasWrapEl) return;
   while (canvasWrapEl.hasChildNodes() && canvasWrapEl.firstChild) canvasWrapEl.removeChild(canvasWrapEl.firstChild);
-  engine.world.gravity.y = 2.0;
+  engine.world.gravity.y = 1.5;
   render = Render.create({ 
     element: canvasWrapEl, 
     engine: engine, 
@@ -158,9 +158,10 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
     const newItem = Matter.Bodies.circle(fixedItem.position.x, fixedItem.position.y, radius, {
       isStatic: false,
       label: label,
-      restitution: 0,
+      restitution: 0.1,
       mass: mass,
-      friction: 1,
+      friction: 0.8,
+      frictionAir: 0.01,
       render: {
         sprite: {
           texture: getImgUrl(label),
@@ -239,9 +240,10 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
         const newFruit = Matter.Bodies.circle(midX, midY, radius, {
           isStatic: false,
           label: label,
-          restitution: 0,
+          restitution: 0.1,
           mass: mass,
-          friction: 1,
+          friction: 0.8,
+          frictionAir: 0.01,
           render: {
             sprite: {
               texture: getImgUrl(label),
