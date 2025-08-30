@@ -325,16 +325,16 @@ const useMatterJS = (props: UseMatterJSProps) => {
       return label === Fruit.STRAWBERRY || label === Fruit.BLUEBERRY;
     });
     
-    // 제거 이펙트
-    bodiesToRemove.forEach(body => {
-      // 반짝이는 이펙트
-      fireRapidStarConfetti();
+    // 제거된 과일이 있을 때만 효과 실행
+    if (bodiesToRemove.length > 0) {
+      // 깔끔한 빵빠레 효과
+      fireConfetti();
       
       // 사운드 효과
       const popSound = new Audio(require('../../resource/pop2.mp3'));
-      popSound.volume = 0.3;
+      popSound.volume = 0.4;
       popSound.play();
-    });
+    }
     
     World.remove(engine.world, bodiesToRemove);
   }

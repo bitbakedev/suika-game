@@ -3,9 +3,9 @@ import { useCallback } from 'react';
 
 const useConfetti = () => {
   const fireConfetti = useCallback(() => {
-    const count = 200;
+    const count = 100;
     const defaults = {
-      origin: { y: 1 },
+      origin: { y: 0.7 },
     };
 
     function fire(particleRatio: number, opts: confetti.Options) {
@@ -16,28 +16,17 @@ const useConfetti = () => {
       });
     }
 
-    fire(0.25, {
+    fire(0.4, {
       spread: 90,
-      startVelocity: 55,
+      startVelocity: 45,
+      decay: 0.9,
+      scalar: 0.9,
     });
-    fire(0.2, {
+    fire(0.3, {
       spread: 90,
-    });
-    fire(0.35, {
-      spread: 90,
-      startVelocity: 75,
-      decay: 0.91,
-      scalar: 0.8,
-    });
-    fire(0.1, {
-      spread: 90,
-      startVelocity: 55,
-      decay: 0.92,
-      scalar: 1.2,
-    });
-    fire(0.1, {
-      spread: 90,
-      startVelocity: 75,
+      startVelocity: 35,
+      decay: 0.85,
+      scalar: 1.1,
     });
   }, []);
 
