@@ -4,7 +4,6 @@ import classNames from "classnames/bind";
 import useMatterJS from "./useMatterJS";
 import { Fruit, getRandomFruitFeature } from './object/Fruit';
 import GameOverModal from './gameOverModal';
-import Intro from './intro';
 import Header from './header';
 
 const cx = classNames.bind(styles);
@@ -13,7 +12,6 @@ const SuikaGame = () => {
   const [bestScore, setBestScore] = useState(0);
   const [score, setScore] = useState(0);
   const [nextItem, setNextItem] = useState<Fruit>(getRandomFruitFeature()?.label as Fruit);
-  const [isStart, setIsStart] = useState<boolean>(false);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
 
   const { clear } = useMatterJS({ score, setScore, nextItem, setNextItem, isGameOver, setIsGameOver });
@@ -39,20 +37,23 @@ const SuikaGame = () => {
     clear();
   }
 
-  const handleGameStart = () => {
-    setIsStart(true);
+  const handleClose = () => {
+    // 게임 종료 로직 (예: 부모 컴포넌트로 알림)
+    window.close();
   }
 
   return (
     <div className={cx('gameArea')}>
-      <div className={cx('gameWrap')} style={{ visibility: isStart ? 'visible' : 'hidden'}}>
+      <div className={cx('gameWrap')}>
+        <button className={cx('closeButton')} onClick={handleClose}>
+          ×
+        </button>
         <div className={cx('canvasArea')}>
           <Header bestScore={bestScore} score={score} nextItem={nextItem}/>
           <div id={'canvasWrap'} className={cx('canvasWrap')}/>
         </div>
       </div>
 
-      <Intro isVisible={!isStart} handleGameStart={handleGameStart}/>
       <GameOverModal isVisible={isGameOver} onClick={handleTryAgain} score={score} />
     </div>
   )
