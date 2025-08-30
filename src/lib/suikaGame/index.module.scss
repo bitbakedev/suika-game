@@ -90,9 +90,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
-  padding-bottom: 90px; /* 하단 미리보기 공간 확보 */
-  max-width: 500px;
+  padding: 0 10px;
+  padding-bottom: 100px; /* 하단 미리보기 공간 확보 */
   margin: 0 auto;
   width: 100%;
 }
@@ -110,6 +109,8 @@
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 100%;
   }
 
   canvas {
@@ -118,5 +119,7 @@
     user-select: none;
     cursor: pointer;
     display: block;
+    width: 100% !important;
+    max-width: 100%;
   }
 }
