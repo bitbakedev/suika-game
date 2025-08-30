@@ -14,9 +14,11 @@ const SuikaGame = () => {
   const [nextItem, setNextItem] = useState<Fruit>(getRandomFruitFeature()?.label as Fruit);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [itemCount, setItemCount] = useState<number>(3);
+  const [shakeItemCount, setShakeItemCount] = useState<number>(2);
   const [isItemActive, setIsItemActive] = useState<boolean>(false);
+  const [isShakeActive, setIsShakeActive] = useState<boolean>(false);
 
-  const { clear, removeSmallFruits } = useMatterJS({ 
+  const { clear, removeSmallFruits, shakeCanvas } = useMatterJS({ 
     score, 
     setScore, 
     nextItem, 
@@ -44,7 +46,9 @@ const SuikaGame = () => {
     setNextItem(getRandomFruitFeature()?.label as Fruit);
     setIsGameOver(false);
     setItemCount(3);
+    setShakeItemCount(2);
     setIsItemActive(false);
+    setIsShakeActive(false);
     clear();
   }
 
@@ -65,6 +69,19 @@ const SuikaGame = () => {
     }
   }
 
+  const handleShakeUse = () => {
+    if (shakeItemCount > 0 && !isGameOver) {
+      setShakeItemCount(prev => prev - 1);
+      setIsShakeActive(true);
+      shakeCanvas();
+      
+      // 이펙트 애니메이션
+      setTimeout(() => {
+        setIsShakeActive(false);
+      }, 1000);
+    }
+  }
+
   return (
     <div className={cx('gameArea')}>
       <div className={cx('topArea')}>
@@ -75,6 +92,13 @@ const SuikaGame = () => {
             title={`아이템 사용 (${itemCount}개 남음)`}
           >
             {itemCount}
+          </div>
+          <div 
+            className={cx('bestScoreCircle', { active: isShakeActive })} 
+            onClick={handleShakeUse}
+            title={`흔들기 아이템 (${shakeItemCount}개 남음)`}
+          >
+            🌪️
           </div>
         </div>
         

@@ -339,9 +339,51 @@ const useMatterJS = (props: UseMatterJSProps) => {
     World.remove(engine.world, bodiesToRemove);
   }
 
+  const shakeCanvas = () => {
+    const allBodies = engine.world.bodies.filter(body => 
+      !body.isStatic && !body.isSensor && body.label !== 'GUIDE_LINE'
+    );
+    
+    // 사운드 효과
+    const popSound = new Audio(require('../../resource/pop.mp3'));
+    popSound.volume = 0.5;
+    popSound.play();
+    
+    // 모든 과일에 좌우 흔들림 효과 적용
+    allBodies.forEach((body, index) => {
+      const delay = index * 50; // 순차적으로 흔들림 적용
+      
+      setTimeout(() => {
+        const shakeForce = 0.02;
+        const randomDirection = Math.random() > 0.5 ? 1 : -1;
+        
+        Matter.Body.applyForce(body, body.position, {
+          x: shakeForce * randomDirection,
+          y: -0.01 // 약간 위로도 튀게
+        });
+      }, delay);
+    });
+    
+    // 연속으로 여러 번 흔들기
+    for (let i = 1; i < 5; i++) {
+      setTimeout(() => {
+        allBodies.forEach(body => {
+          const shakeForce = 0.015 * (5 - i) / 5; // 점점 약해지는 흔들림
+          const randomDirection = Math.random() > 0.5 ? 1 : -1;
+          
+          Matter.Body.applyForce(body, body.position, {
+            x: shakeForce * randomDirection,
+            y: 0
+          });
+        });
+      }, i * 150);
+    }
+  }
+
   return {
     clear,
-    removeSmallFruits
+    removeSmallFruits,
+    shakeCanvas
   }
 };
 
