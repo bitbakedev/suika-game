@@ -13,8 +13,17 @@ const SuikaGame = () => {
   const [score, setScore] = useState(0);
   const [nextItem, setNextItem] = useState<Fruit>(getRandomFruitFeature()?.label as Fruit);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const [itemCount, setItemCount] = useState<number>(3);
+  const [isItemActive, setIsItemActive] = useState<boolean>(false);
 
-  const { clear } = useMatterJS({ score, setScore, nextItem, setNextItem, isGameOver, setIsGameOver });
+  const { clear, removeSmallFruits } = useMatterJS({ 
+    score, 
+    setScore, 
+    nextItem, 
+    setNextItem, 
+    isGameOver, 
+    setIsGameOver 
+  });
 
   useEffect(() => {
     const bestScore = localStorage.getItem('bestScore');
@@ -34,6 +43,8 @@ const SuikaGame = () => {
     setScore(0);
     setNextItem(getRandomFruitFeature()?.label as Fruit);
     setIsGameOver(false);
+    setItemCount(3);
+    setIsItemActive(false);
     clear();
   }
 
@@ -41,12 +52,29 @@ const SuikaGame = () => {
     window.close();
   }
 
+  const handleItemUse = () => {
+    if (itemCount > 0 && !isGameOver) {
+      setItemCount(prev => prev - 1);
+      setIsItemActive(true);
+      removeSmallFruits();
+      
+      // 이펙트 애니메이션
+      setTimeout(() => {
+        setIsItemActive(false);
+      }, 600);
+    }
+  }
+
   return (
     <div className={cx('gameArea')}>
       <div className={cx('topArea')}>
         <div className={cx('leftSection')}>
-          <div className={cx('bestScoreCircle')}>
-            {score > bestScore ? score : bestScore}
+          <div 
+            className={cx('bestScoreCircle', { active: isItemActive })} 
+            onClick={handleItemUse}
+            title={`아이템 사용 (${itemCount}개 남음)`}
+          >
+            {itemCount}
           </div>
         </div>
         

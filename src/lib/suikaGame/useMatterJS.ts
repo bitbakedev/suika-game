@@ -317,8 +317,29 @@ const useMatterJS = (props: UseMatterJSProps) => {
     run();
   }
 
+  const removeSmallFruits = () => {
+    const bodiesToRemove = engine.world.bodies.filter(body => {
+      const label = body.label as Fruit;
+      return label === Fruit.STRAWBERRY || label === Fruit.BLUEBERRY;
+    });
+    
+    // 제거 이펙트
+    bodiesToRemove.forEach(body => {
+      // 반짝이는 이펙트
+      fireRapidStarConfetti();
+      
+      // 사운드 효과
+      const popSound = new Audio(require('../../resource/pop2.mp3'));
+      popSound.volume = 0.3;
+      popSound.play();
+    });
+    
+    World.remove(engine.world, bodiesToRemove);
+  }
+
   return {
-    clear
+    clear,
+    removeSmallFruits
   }
 };
 
