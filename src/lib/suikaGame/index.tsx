@@ -133,7 +133,7 @@ const SuikaGame = () => {
       </div>
       
       <button className={cx('closeButton')} onClick={handleClose}>
-      </div>
+      </button>
 
       <FruitPreview onRestart={handleTryAgain} />
       
