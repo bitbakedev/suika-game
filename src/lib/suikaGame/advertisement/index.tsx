@@ -47,11 +47,6 @@ const Advertisement = ({
           data-full-width-responsive={responsive ? 'true' : 'false'}
           ref={adRef}
         />
-        
-        {/* 광고가 로드되지 않았을 때 표시할 플레이스홀더 */}
-        <div className={cx('adPlaceholder')}>
-          Advertisement
-        </div>
       </div>
     </div>
   );
