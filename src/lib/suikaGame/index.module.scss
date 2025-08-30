@@ -6,19 +6,21 @@
   width: 100%;
   height: 100vh;
   background: linear-gradient(0deg, #f5f1c4, #cfa76f, #a0633b);
+  padding: 8px;
+  box-sizing: border-box;
 
   .gameWrap {
     position: relative;
-    top: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 12px;
     width: 100%;
+    max-width: 400px;
     min-width: 176px;
-    height: 100vh;
-    padding: 8px;
+    height: 100%;
+    max-height: calc(100vh - 16px);
     box-sizing: border-box;
   }
 }
@@ -30,13 +32,15 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  flex: 1;
-  gap: 0.2em;
-  min-height: 0;
+  gap: 8px;
   position: relative;
+  flex-shrink: 0;
 
   .canvasWrap {
     user-select: none;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   }
 
   canvas {
@@ -44,12 +48,13 @@
     border-radius: 16px;
     user-select: none;
     cursor: pointer;
+    display: block;
   }
 
   .closeButton {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: -4px;
+    right: -4px;
     background: rgba(255, 255, 255, 0.2);
     border: 2px solid rgba(255, 255, 255, 0.3);
     color: white;
@@ -61,7 +66,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     font-family: 'Patrick Hand', 'Pretendard', sans-serif;
-    z-index: 10;
+    z-index: 100;
     backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
@@ -84,8 +89,8 @@
       font-size: 1em;
       width: 36px;
       height: 36px;
-      top: 4px;
-      right: 4px;
+      top: -2px;
+      right: -2px;
     }
   }
 }
