@@ -337,9 +337,35 @@ const useMatterJS = (props: UseMatterJSProps) => {
     World.remove(engine.world, bodiesToRemove);
   }
 
+  const shakeCanvas = () => {
+    // 모든 과일에 랜덤한 힘을 가해서 흔들기 효과
+    const allFruits = engine.world.bodies.filter(body => {
+      return !body.isStatic && !body.isSensor && body.label !== 'WALL_BACK' && 
+             body.label !== 'WALL_BOTTOM' && body.label !== 'WALL_LEFT' && 
+             body.label !== 'WALL_RIGHT' && body.label !== 'GAME_OVER_LINE' && 
+             body.label !== 'GAME_OVER_GUIDE_LINE' && body.label !== 'GUIDE_LINE';
+    });
+
+    allFruits.forEach(body => {
+      const forceX = (Math.random() - 0.5) * 0.02; // -0.01 ~ 0.01
+      const forceY = (Math.random() - 0.5) * 0.01; // -0.005 ~ 0.005
+      
+      Matter.Body.applyForce(body, body.position, { x: forceX, y: forceY });
+    });
+
+    // 흔들기 이펙트
+    fireRapidStarConfetti();
+    
+    // 사운드 효과
+    const shakeSound = new Audio(require('../../resource/pop.mp3'));
+    shakeSound.volume = 0.5;
+    shakeSound.play();
+  }
+
   return {
     clear,
-    removeSmallFruits
+    removeSmallFruits,
+    shakeCanvas
   }
 };
 
