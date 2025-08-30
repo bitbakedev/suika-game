@@ -17,16 +17,17 @@ const FruitPreview = ({ onRestart }: FruitPreviewProps) => {
         <button className={cx('settingsButton')} onClick={onRestart}>
           ⚙️
         </button>
-        {fruits.map((fruit, index) => (
-          <div 
-            key={fruit} 
-            className={cx('fruitItem')}
-            style={{ 
-              backgroundImage: `url(${require('../../../resource/' + fruit + '.png')})`,
-              animationDelay: `${index * 0.1}s`
-            }}
-          />
-        ))}
+        <div className={cx('fruitContainer')}>
+          {fruits.map((fruit, index) => (
+            <div 
+              key={fruit} 
+              className={cx('fruitItem')}
+              style={{ 
+                backgroundImage: `url(${require('../../../resource/' + fruit + '.png')})`
+              }}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
