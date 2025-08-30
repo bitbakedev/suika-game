@@ -139,8 +139,13 @@
   font-family: 'Helvetica Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'SF Pro Display', system-ui, sans-serif;
   font-size: clamp(24px, 5vw, 32px);
   font-weight: 900;
-  color: #D2691E;
-  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  color: #955200;
+  text-shadow: 
+    -1px -1px 0 #ffffff,
+    1px -1px 0 #ffffff,
+    -1px 1px 0 #ffffff,
+    1px 1px 0 #ffffff,
+    0 3px 6px rgba(0, 0, 0, 0.3);
   letter-spacing: 0.8px;
   white-space: nowrap;
   overflow: hidden;
