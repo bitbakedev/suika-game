@@ -28,7 +28,7 @@ const SuikaGame = () => {
         localStorage.setItem('bestScore', score.toString());
       }
     }
-  }, [isGameOver]);
+  }, [isGameOver, score]);
 
   const handleTryAgain = () => {
     setScore(0);

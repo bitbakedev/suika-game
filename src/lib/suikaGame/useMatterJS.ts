@@ -242,7 +242,6 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
               xScale: (radius * 2) / 200,
               yScale: (radius * 2) / 200,
             }
-            yScale: (radius * 2) / 200,
           }
         });
 
