@@ -246,7 +246,7 @@ var useMatterJS = function (props) {
         return (function () {
             props.setScore(0);
         });
-    }, [props, fireConfetti, fireRapidStarConfetti]);
+    }, []);
     var clear = function () {
         fixedItem = null;
         engine = Engine.create();
@@ -254,27 +254,8 @@ var useMatterJS = function (props) {
         event(props, { fireConfetti: fireConfetti, fireRapidStarConfetti: fireRapidStarConfetti });
         run();
     };
-    var removeOverflowFruits = function () {
-        // 게임 오버 라인 위에 있는 과일들을 제거
-        var gameOverY = getRenderHeight() / 6.5 - 30;
-        var bodiesToRemove = engine.world.bodies.filter(function (body) {
-            return !body.isStatic &&
-                !body.isSensor &&
-                body.position.y < gameOverY &&
-                body.label !== 'GUIDE_LINE' &&
-                body.label !== 'GAME_OVER_LINE' &&
-                body.label !== 'GAME_OVER_GUIDE_LINE' &&
-                !body.label.includes('WALL');
-        });
-        bodiesToRemove.forEach(function (body) {
-            World.remove(engine.world, body);
-        });
-        // 새로운 고정 아이템 생성
-        createFixedItem(props);
-    };
     return {
-        clear: clear,
-        removeOverflowFruits: removeOverflowFruits
+        clear: clear
     };
 };
 export default useMatterJS;

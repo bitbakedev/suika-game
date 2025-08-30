@@ -1,6 +1,6 @@
 import Matter from 'matter-js';
-import { SetStateAction, useEffect, useRef } from "react";
-import Wall from "./object/Wall";
+import { SetStateAction, useEffect } from "react";
+import Wall, { WALL_BACK } from "./object/Wall";
 import { Fruit, getFruitFeature, getNextFruitFeature, getRandomFruitFeature } from "./object/Fruit";
 import { getRenderHeight, getRenderWidth } from "./object/Size";
 import { GameOverLine, GameOverGuideLine } from './object/GameOverLine';
@@ -11,6 +11,16 @@ const { Engine, Render, World, Mouse, MouseConstraint } = Matter;
 const frameInterval = 1000 / 60; // 60fps
 const getImgUrl = (fruit: Fruit) => require('../../resource/' + fruit + '.png');
 
+let engine = Engine.create();
+let render: Matter.Render | null = null;
+let requestAnimation: number | null = null;
+let lastTime = 0;
+let fixedItemTimeOut: NodeJS.Timeout | null = null;
+let fixedItem: Matter.Body | null = null; // 고정된 아이템
+let prevPosition = { x: getRenderWidth() / 2, y: 50 };
+let nextFruit: Fruit | null = null;
+let prevMergingFruitIds: number[] = [];
+
 const renderOptions = {
   width: getRenderWidth(),
   height: getRenderHeight(),
@@ -19,26 +29,26 @@ const renderOptions = {
   borderRadius: '16px',
 };
 
-const init = (props: UseMatterJSProps, refs: MatterJSRefs) => {
+const init = (props: UseMatterJSProps) => {
   const canvasWrapEl = document.getElementById('canvasWrap');
   if (!canvasWrapEl) return;
   while (canvasWrapEl.hasChildNodes() && canvasWrapEl.firstChild) canvasWrapEl.removeChild(canvasWrapEl.firstChild);
-  refs.engineRef.current.world.gravity.y = 2.0;
-  refs.renderRef.current = Render.create({ element: canvasWrapEl, engine: refs.engineRef.current, options: renderOptions });
-  World.add(refs.engineRef.current.world, [...Wall]);
-  World.add(refs.engineRef.current.world, [GameOverGuideLine, GuideLine]);
-  refs.nextFruitRef.current = props.nextItem;
-  createFixedItem(props, refs);
+  engine.world.gravity.y = 2.0;
+  render = Render.create({ element: canvasWrapEl, engine: engine, options: renderOptions });
+  World.add(engine.world, [...Wall]);
+  World.add(engine.world, [GameOverGuideLine, GuideLine]);
+  nextFruit = props.nextItem;
+  createFixedItem(props);
 };
 
-const createFixedItem = ({ setNextItem }: UseMatterJSProps, refs: MatterJSRefs) => {
-  if (refs.fixedItemRef.current) return;
-  if (!refs.nextFruitRef.current) return;
-  const feature = getFruitFeature(refs.nextFruitRef.current);
+const createFixedItem = ({ setNextItem }: UseMatterJSProps) => {
+  if (fixedItem) return;
+  if (!nextFruit) return;
+  const feature = getFruitFeature(nextFruit);
   const label = feature?.label as Fruit;
   const radius = feature?.radius || 1;
   const mass = feature?.mass || 1;
-  refs.fixedItemRef.current = Matter.Bodies.circle(refs.prevPositionRef.current.x, refs.prevPositionRef.current.y, radius, {
+  fixedItem = Matter.Bodies.circle(prevPosition.x, prevPosition.y, radius, {
     isStatic: true,
     isSensor: true,
     label: label,
@@ -53,30 +63,30 @@ const createFixedItem = ({ setNextItem }: UseMatterJSProps, refs: MatterJSRefs) 
       }
     }
   });
-  World.add(refs.engineRef.current.world, refs.fixedItemRef.current);
+  World.add(engine.world, fixedItem);
 
   const newNextItem = getRandomFruitFeature()?.label as Fruit;
-  refs.nextFruitRef.current = newNextItem;
+  nextFruit = newNextItem;
   setNextItem(newNextItem);
 }
 
-const handleGameOver = (props: UseMatterJSProps, refs: MatterJSRefs) => {
+const handleGameOver = (props: UseMatterJSProps) => {
   props.setIsGameOver(true);
-  refs.requestAnimationRef.current && cancelAnimationFrame(refs.requestAnimationRef.current);
+  requestAnimation && cancelAnimationFrame(requestAnimation);
 }
 
 const clamp = (value: number, min: number, max: number) => {
   return Math.min(Math.max(value, min), max);
 }
 
-const setPositionFixedItem = (event: any, refs: MatterJSRefs) => {
-  if(!refs.fixedItemRef.current) return;
-  const minX = refs.fixedItemRef.current.circleRadius ? refs.fixedItemRef.current.circleRadius : 0;
-  const maxX = refs.fixedItemRef.current.circleRadius ? getRenderWidth() - refs.fixedItemRef.current.circleRadius : getRenderWidth();
+const setPositionFixedItem = (event: any) => {
+  if(!fixedItem) return;
+  const minX = fixedItem.circleRadius ? fixedItem.circleRadius : 0;
+  const maxX = fixedItem.circleRadius ? getRenderWidth() - fixedItem.circleRadius : getRenderWidth();
 
-  Matter.Body.setPosition(refs.fixedItemRef.current, {
+  Matter.Body.setPosition(fixedItem, {
     x: clamp(event.mouse.position.x, minX, maxX),
-    y: refs.fixedItemRef.current.position.y,
+    y: fixedItem.position.y,
   });
   Matter.Body.setPosition(GuideLine, {
     x: clamp(event.mouse.position.x, minX, maxX),
@@ -84,20 +94,11 @@ const setPositionFixedItem = (event: any, refs: MatterJSRefs) => {
   })
 }
 
-const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fireRapidStarConfetti: () => void }, refs: MatterJSRefs) => {
-  if (!refs.renderRef.current) return;
+const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fireRapidStarConfetti: () => void }) => {
+  if (!render) return;
 
-  // 기존 이벤트 리스너 제거
-  if (refs.mouseConstraintRef.current) {
-    Matter.Events.off(refs.mouseConstraintRef.current, 'startdrag');
-    Matter.Events.off(refs.mouseConstraintRef.current, 'mousemove');
-    Matter.Events.off(refs.mouseConstraintRef.current, 'enddrag');
-    World.remove(refs.engineRef.current.world, refs.mouseConstraintRef.current);
-  }
-  Matter.Events.off(refs.engineRef.current, 'collisionStart');
-
-  const mouse = Mouse.create(refs.renderRef.current.canvas);
-  refs.mouseConstraintRef.current = MouseConstraint.create(refs.engineRef.current, {
+  const mouse = Mouse.create(render.canvas);
+  const mouseConstraint = MouseConstraint.create(engine, {
     mouse: mouse,
     constraint: {
       stiffness: 1,
@@ -108,31 +109,31 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
   });
 
   // 마우스 버튼 누르면 원 이동 시작
-  Matter.Events.on(refs.mouseConstraintRef.current, 'startdrag', (event: any) => {
-    if(!refs.fixedItemRef.current) return;
-    refs.fixedItemTimeOutRef.current && clearTimeout(refs.fixedItemTimeOutRef.current);
-    refs.prevMergingFruitIdsRef.current = [];
-    setPositionFixedItem(event, refs);
+  Matter.Events.on(mouseConstraint, 'startdrag', (event: any) => {
+    if(!fixedItem) return;
+    fixedItemTimeOut && clearTimeout(fixedItemTimeOut);
+    prevMergingFruitIds = [];
+    setPositionFixedItem(event);
   });
 
   // 마우스 이동 시 원을 마우스 위치로 이동
-  Matter.Events.on(refs.mouseConstraintRef.current, 'mousemove', (event: any) => {
-    setPositionFixedItem(event, refs);
+  Matter.Events.on(mouseConstraint, 'mousemove', (event: any) => {
+    setPositionFixedItem(event);
   });
 
   // 마우스 버튼 뗄 때 원의 고정 해제
-  Matter.Events.on(refs.mouseConstraintRef.current, 'enddrag', (event: any) => {
+  Matter.Events.on(mouseConstraint, 'enddrag', (event: any) => {
     // 원의 고정 해제
-    if (!refs.fixedItemRef.current) return;
-    setPositionFixedItem(event, refs);
+    if (!fixedItem) return;
+    setPositionFixedItem(event);
 
     const popSound = new Audio(require('../../resource/pop.mp3'));
     popSound.play();
-    const label = refs.fixedItemRef.current?.label as Fruit;
+    const label = fixedItem?.label as Fruit;
     const feature = getFruitFeature(label);
     const radius = feature?.radius || 1;
     const mass = feature?.mass || 1;
-    const newItem = Matter.Bodies.circle(refs.fixedItemRef.current.position.x, refs.fixedItemRef.current.position.y, radius, {
+    const newItem = Matter.Bodies.circle(fixedItem.position.x, fixedItem.position.y, radius, {
       isStatic: false,
       label: label,
       restitution: 0,
@@ -147,29 +148,29 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
       },
     });
 
-    refs.prevPositionRef.current.x = refs.fixedItemRef.current.position.x;
+    prevPosition.x = fixedItem.position.x;
 
     GuideLine.render.fillStyle = '#ffffff00';
-    World.remove(refs.engineRef.current.world, refs.fixedItemRef.current);
-    World.remove(refs.engineRef.current.world, GameOverLine);
-    refs.fixedItemRef.current = null;
-    World.add(refs.engineRef.current.world, newItem);
+    World.remove(engine.world, fixedItem);
+    World.remove(engine.world, GameOverLine);
+    fixedItem = null;
+    World.add(engine.world, newItem);
 
-    refs.fixedItemTimeOutRef.current = setTimeout(() => {
+    fixedItemTimeOut = setTimeout(() => {
       GuideLine.render.fillStyle = GuideLineColor;
-      World.add(refs.engineRef.current.world, GameOverLine);
-      createFixedItem(props, refs);
+      World.add(engine.world, GameOverLine);
+      createFixedItem(props);
     }, 750);
   });
 
-  Matter.Events.on(refs.engineRef.current, 'collisionStart', (event) => {
+  Matter.Events.on(engine, 'collisionStart', (event) => {
     const pairs = event.pairs;
     pairs.forEach((pair) => {
       const bodyA = pair.bodyA;
       const bodyB = pair.bodyB;
       
       if (bodyA.label === GameOverLine.label || bodyB.label === GameOverLine.label) {
-        handleGameOver(props, refs);
+        handleGameOver(props);
         return;
       }
 
@@ -183,18 +184,18 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
       if (labelA === Fruit.GOLDWATERMELON && labelB === Fruit.GOLDWATERMELON) return;
 
       // 이미 합치는 중이면 무시
-      if (refs.prevMergingFruitIdsRef.current.includes(bodyA.id) || refs.prevMergingFruitIdsRef.current.includes(bodyB.id)) return refs.prevMergingFruitIdsRef.current = [];
+      if (prevMergingFruitIds.includes(bodyA.id) || prevMergingFruitIds.includes(bodyB.id)) return prevMergingFruitIds = [];
 
       // 같은 크기인 경우에만 합치기
       if (labelA === labelB) {
-        refs.prevMergingFruitIdsRef.current = [bodyA.id, bodyB.id];
+        prevMergingFruitIds = [bodyA.id, bodyB.id];
         
         // 과일이 합쳐질 때 사운드 효과
         const popSound = new Audio(require('../../resource/pop2.mp3'));
         popSound.play();
 
-        World.remove(refs.engineRef.current.world, bodyA);
-        World.remove(refs.engineRef.current.world, bodyB);
+        World.remove(engine.world, bodyA);
+        World.remove(engine.world, bodyB);
 
         // 새로운 Fruit 생성 (크기가 한 사이즈 큰 것)
         const feature = getNextFruitFeature(labelA); // 이 함수는 한 사이즈 큰 Fruit 특성을 반환하도록 수정
@@ -224,44 +225,31 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
           }
         });
 
-        World.add(refs.engineRef.current.world, newFruit);
+        World.add(engine.world, newFruit);
         props.setScore(prev => prev + score);
       }
     });
   });
 
-  World.add(refs.engineRef.current.world, refs.mouseConstraintRef.current);
+  // World.add(engine.world, mouseConstraint);
 };
 
-const animate = (currentTime: number, refs: MatterJSRefs) => {
-  refs.requestAnimationRef.current = requestAnimationFrame((time) => animate(time, refs));
+const animate = (currentTime: number) => {
+  requestAnimation = requestAnimationFrame(animate);
 
-  const elapsed = currentTime - refs.lastTimeRef.current;
+  const elapsed = currentTime - lastTime;
 
   if (elapsed > frameInterval) {
-    Engine.update(refs.engineRef.current, frameInterval);
-    refs.lastTimeRef.current = currentTime - (elapsed % frameInterval);
+    Engine.update(engine, frameInterval);
+    lastTime = currentTime - (elapsed % frameInterval);
   }
 };
 
-const run = (refs: MatterJSRefs) => {
-  if (!refs.renderRef.current) return;
-  animate(0, refs); // 시작할 때 시간을 0으로 초기화
-  Render.run(refs.renderRef.current);
+const run = () => {
+  if (!render) return;
+  animate(0); // 시작할 때 시간을 0으로 초기화
+  Render.run(render);
 };
-
-interface MatterJSRefs {
-  engineRef: React.MutableRefObject<Matter.Engine>;
-  renderRef: React.MutableRefObject<Matter.Render | null>;
-  requestAnimationRef: React.MutableRefObject<number | null>;
-  lastTimeRef: React.MutableRefObject<number>;
-  fixedItemTimeOutRef: React.MutableRefObject<NodeJS.Timeout | null>;
-  fixedItemRef: React.MutableRefObject<Matter.Body | null>;
-  prevPositionRef: React.MutableRefObject<{ x: number; y: number }>;
-  nextFruitRef: React.MutableRefObject<Fruit | null>;
-  prevMergingFruitIdsRef: React.MutableRefObject<number[]>;
-  mouseConstraintRef: React.MutableRefObject<Matter.MouseConstraint | null>;
-}
 
 interface UseMatterJSProps {
   score: number;
@@ -270,139 +258,31 @@ interface UseMatterJSProps {
   setNextItem: React.Dispatch<SetStateAction<Fruit>>;
   isGameOver: boolean;
   setIsGameOver: React.Dispatch<SetStateAction<boolean>>;
-  canContinue?: boolean;
 }
 
 const useMatterJS = (props: UseMatterJSProps) => {
   const { fireConfetti, fireRapidStarConfetti } = useConfetti();
 
-  const engineRef = useRef(Engine.create());
-  const renderRef = useRef<Matter.Render | null>(null);
-  const requestAnimationRef = useRef<number | null>(null);
-  const lastTimeRef = useRef(0);
-  const fixedItemTimeOutRef = useRef<NodeJS.Timeout | null>(null);
-  const fixedItemRef = useRef<Matter.Body | null>(null);
-  const prevPositionRef = useRef({ x: getRenderWidth() / 2, y: 50 });
-  const nextFruitRef = useRef<Fruit | null>(null);
-  const prevMergingFruitIdsRef = useRef<number[]>([]);
-  const mouseConstraintRef = useRef<Matter.MouseConstraint | null>(null);
-
-  const refs: MatterJSRefs = {
-    engineRef,
-    renderRef,
-    requestAnimationRef,
-    lastTimeRef,
-    fixedItemTimeOutRef,
-    fixedItemRef,
-    prevPositionRef,
-    nextFruitRef,
-    prevMergingFruitIdsRef,
-    mouseConstraintRef
-  };
-
   useEffect(() => {
-    init(props, refs);
-    event(props, { fireConfetti, fireRapidStarConfetti }, refs);
-    run(refs);
+    init(props);
+    event(props, { fireConfetti, fireRapidStarConfetti });
+    run();
 
-    return () => {
-      // 종합적인 정리 작업
-      if (refs.renderRef.current) {
-        Render.stop(refs.renderRef.current);
-        refs.renderRef.current.canvas.remove();
-        refs.renderRef.current = null;
-      }
-      
-      if (refs.requestAnimationRef.current) {
-        cancelAnimationFrame(refs.requestAnimationRef.current);
-        refs.requestAnimationRef.current = null;
-      }
-      
-      if (refs.mouseConstraintRef.current) {
-        Matter.Events.off(refs.mouseConstraintRef.current, 'startdrag');
-        Matter.Events.off(refs.mouseConstraintRef.current, 'mousemove');
-        Matter.Events.off(refs.mouseConstraintRef.current, 'enddrag');
-        World.remove(refs.engineRef.current.world, refs.mouseConstraintRef.current);
-        refs.mouseConstraintRef.current = null;
-      }
-      
-      Matter.Events.off(refs.engineRef.current, 'collisionStart');
-      Engine.clear(refs.engineRef.current);
-      
-      if (refs.fixedItemTimeOutRef.current) {
-        clearTimeout(refs.fixedItemTimeOutRef.current);
-        refs.fixedItemTimeOutRef.current = null;
-      }
-      
+    return (() => {
       props.setScore(0);
-    };
-  }, [fireConfetti, fireRapidStarConfetti]);
+    })
+  }, []);
 
   const clear = () => {
-    // 기존 정리 작업
-    if (refs.renderRef.current) {
-      Render.stop(refs.renderRef.current);
-      refs.renderRef.current.canvas.remove();
-      refs.renderRef.current = null;
-    }
-    
-    if (refs.requestAnimationRef.current) {
-      cancelAnimationFrame(refs.requestAnimationRef.current);
-      refs.requestAnimationRef.current = null;
-    }
-    
-    if (refs.mouseConstraintRef.current) {
-      Matter.Events.off(refs.mouseConstraintRef.current, 'startdrag');
-      Matter.Events.off(refs.mouseConstraintRef.current, 'mousemove');
-      Matter.Events.off(refs.mouseConstraintRef.current, 'enddrag');
-      World.remove(refs.engineRef.current.world, refs.mouseConstraintRef.current);
-      refs.mouseConstraintRef.current = null;
-    }
-    
-    Matter.Events.off(refs.engineRef.current, 'collisionStart');
-    Engine.clear(refs.engineRef.current);
-    
-    if (refs.fixedItemTimeOutRef.current) {
-      clearTimeout(refs.fixedItemTimeOutRef.current);
-      refs.fixedItemTimeOutRef.current = null;
-    }
-
-    // 새로 초기화
-    refs.fixedItemRef.current = null;
-    refs.engineRef.current = Engine.create();
-    refs.lastTimeRef.current = 0;
-    refs.prevMergingFruitIdsRef.current = [];
-    refs.prevPositionRef.current = { x: getRenderWidth() / 2, y: 50 };
-    
-    init(props, refs);
-    event(props, { fireConfetti, fireRapidStarConfetti }, refs);
-    run(refs);
-  }
-
-  const removeOverflowFruits = () => {
-    // 게임 오버 라인 위에 있는 과일들을 제거
-    const gameOverY = getRenderHeight() / 6.5 - 30;
-    const bodiesToRemove = refs.engineRef.current.world.bodies.filter(body => 
-      !body.isStatic && 
-      !body.isSensor && 
-      body.position.y < gameOverY &&
-      body.label !== 'GUIDE_LINE' &&
-      body.label !== 'GAME_OVER_LINE' &&
-      body.label !== 'GAME_OVER_GUIDE_LINE' &&
-      !body.label.includes('WALL')
-    );
-    
-    bodiesToRemove.forEach(body => {
-      World.remove(refs.engineRef.current.world, body);
-    });
-    
-    // 새로운 고정 아이템 생성
-    createFixedItem(props, refs);
+    fixedItem = null;
+    engine = Engine.create();
+    init(props);
+    event(props, { fireConfetti, fireRapidStarConfetti });
+    run();
   }
 
   return {
-    clear,
-    removeOverflowFruits
+    clear
   }
 };
 

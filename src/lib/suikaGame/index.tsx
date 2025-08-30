@@ -4,10 +4,8 @@ import classNames from "classnames/bind";
 import useMatterJS from "./useMatterJS";
 import { Fruit, getRandomFruitFeature } from './object/Fruit';
 import GameOverModal from './gameOverModal';
+import Intro from './intro';
 import Header from './header';
-import Advertisement from './advertisement';
-import Ranking from './ranking';
-import BackButton from './backButton';
 
 const cx = classNames.bind(styles);
 
@@ -15,12 +13,10 @@ const SuikaGame = () => {
   const [bestScore, setBestScore] = useState(0);
   const [score, setScore] = useState(0);
   const [nextItem, setNextItem] = useState<Fruit>(getRandomFruitFeature()?.label as Fruit);
+  const [isStart, setIsStart] = useState<boolean>(false);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
-  const [showRanking, setShowRanking] = useState<boolean>(false);
-  const [showRankingFromBack, setShowRankingFromBack] = useState<boolean>(false);
-  const [canContinue, setCanContinue] = useState<boolean>(false);
 
-  const { clear, removeOverflowFruits } = useMatterJS({ score, setScore, nextItem, setNextItem, isGameOver, setIsGameOver, canContinue });
+  const { clear } = useMatterJS({ score, setScore, nextItem, setNextItem, isGameOver, setIsGameOver });
 
   useEffect(() => {
     const bestScore = localStorage.getItem('bestScore');
@@ -34,62 +30,30 @@ const SuikaGame = () => {
         localStorage.setItem('bestScore', score.toString());
       }
     }
-  }, [isGameOver, score]);
+  }, [isGameOver]);
 
   const handleTryAgain = () => {
     setScore(0);
     setNextItem(getRandomFruitFeature()?.label as Fruit);
     setIsGameOver(false);
-    setShowRanking(false);
-    setCanContinue(false);
     clear();
   }
 
-  const handleContinueWithAd = () => {
-    setIsGameOver(false);
-    setCanContinue(true);
-    removeOverflowFruits();
-  }
-
-  const handleShowRanking = () => {
-    setShowRanking(true);
-  }
-
-  const handleCloseRanking = () => {
-    setShowRanking(false);
-    setShowRankingFromBack(false);
-  }
-
-  const handleBackButtonClick = () => {
-    setShowRankingFromBack(true);
+  const handleGameStart = () => {
+    setIsStart(true);
   }
 
   return (
     <div className={cx('gameArea')}>
-      <div className={cx('gameWrap')}>
+      <div className={cx('gameWrap')} style={{ visibility: isStart ? 'visible' : 'hidden'}}>
         <div className={cx('canvasArea')}>
-          <BackButton onClick={handleBackButtonClick} />
-          <button className={cx('closeButton')} onClick={() => window.close()}>
-            ✕
-          </button>
           <Header bestScore={bestScore} score={score} nextItem={nextItem}/>
           <div id={'canvasWrap'} className={cx('canvasWrap')}/>
         </div>
-        <Advertisement />
       </div>
 
-      <GameOverModal 
-        isVisible={isGameOver && !showRanking} 
-        onClick={handleTryAgain} 
-        score={score} 
-        onShowRanking={handleShowRanking}
-        onContinueWithAd={handleContinueWithAd}
-      />
-      <Ranking 
-        isVisible={showRanking || showRankingFromBack} 
-        onClose={handleCloseRanking} 
-        currentScore={score}
-      />
+      <Intro isVisible={!isStart} handleGameStart={handleGameStart}/>
+      <GameOverModal isVisible={isGameOver} onClick={handleTryAgain} score={score} />
     </div>
   )
 }
