@@ -4,7 +4,7 @@
   flex-direction: column;
   width: 100%;
   height: 100vh;
-  background: linear-gradient(180deg, #FFB384 0%, #FFE1B6 100%);
+  background: linear-gradient(180deg, #FFE4B5 0%, #DEB887 50%, #D2B48C 100%);
   position: relative;
 }
 
@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 16px;
+  padding: 20px;
   height: 80px;
   position: relative;
   z-index: 100;
@@ -31,28 +31,56 @@
     font-family: 'Pacifico', 'Pretendard', serif;
     font-size: 32px;
     font-weight: bold;
-    color: #000;
+    color: #8B4513;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 }
 
-.settingsButton {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background: #CA661B;
-  border: 1px solid #92460A;
-  color: #fff;
-  font-size: 18px;
+.closeButton {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  font-size: 24px;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   
   &:hover {
-    background: #B85A18;
+    background: rgba(255, 255, 255, 1);
     transform: scale(1.05);
+  }
+}
+
+.nextArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  
+  .nextFruit {
+    width: 50px;
+    height: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .nextText {
+    font-family: 'Patrick Hand', 'Pretendard';
+    font-size: 12px;
+    font-weight: bold;
+    color: #8B4513;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -62,11 +90,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0 16px;
-  padding-bottom: 100px; /* 하단 미리보기 공간 확보 */
+  padding: 0 10px;
+  padding-bottom: 80px; /* 하단 미리보기 공간 확보 */
   margin: 0 auto;
   width: 100%;
-  max-width: 400px;
 }
 
 .canvasArea {
@@ -76,89 +103,28 @@
   justify-content: center;
   width: 100%;
   height: 100%;
-  background: #FFEEE2;
-  border: 4px solid #F0935A;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  max-width: 100%;
+  margin: 0 auto;
 
   .canvasWrap {
     user-select: none;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     width: 100%;
-    height: 100%;
-    position: relative;
+    max-width: 100%;
   }
 
   canvas {
     border: none;
+    border-radius: 20px;
     user-select: none;
     cursor: pointer;
     display: block;
     width: 100% !important;
-    height: 100% !important;
+    max-width: 100%;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
     image-rendering: pixelated;
-  }
-}
-
-.bottomArea {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 70px;
-  background: #CA661B;
-  border: 1px solid #92460A;
-  border-radius: 12px 12px 0 0;
-  margin: 0 8px;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 0 16px;
-  overflow-x: auto;
-  
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-.fruitItem {
-  width: 24px;
-  height: 24px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  background-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-  animation: bounceIn 0.6s ease-out;
-  flex-shrink: 0;
-  
-  &:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-  }
-}
-
-@keyframes bounceIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-  70% {
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
   }
 }
