@@ -124,7 +124,11 @@ const SuikaGame = () => {
           <div className={cx('bestScoreRow')}>
             <div className={cx('crownIcon')}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M5 16L3 8l4 3 5-7 5 7 4-3-2 8H5z" fill="#D2691E" stroke="#D2691E" strokeWidth="2"/>
+                <path d="M4 18h16v-2c0-1-1-2-2-2H6c-1 0-2 1-2 2v2z" fill="#D2691E"/>
+                <circle cx="7" cy="12" r="2" fill="#D2691E"/>
+                <circle cx="12" cy="9" r="2.5" fill="#D2691E"/>
+                <circle cx="17" cy="12" r="2" fill="#D2691E"/>
+                <path d="M5 14l2-2 3 3 3-3 3 3 2-2" stroke="none" fill="#D2691E"/>
               </svg>
             </div>
             <div className={cx('bestScoreText')}>{score > bestScore ? score : bestScore}</div>
