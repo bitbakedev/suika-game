@@ -351,32 +351,32 @@ const useMatterJS = (props: UseMatterJSProps) => {
     
     // 모든 과일에 좌우 흔들림 효과 적용
     allBodies.forEach((body, index) => {
-      const delay = index * 50; // 순차적으로 흔들림 적용
+      const delay = index * 30; // 더 빠른 순차적 흔들림
       
       setTimeout(() => {
-        const shakeForce = 0.02;
+        const shakeForce = 0.05; // 더 강한 힘
         const randomDirection = Math.random() > 0.5 ? 1 : -1;
         
         Matter.Body.applyForce(body, body.position, {
           x: shakeForce * randomDirection,
-          y: -0.01 // 약간 위로도 튀게
+          y: -0.03 // 더 강하게 위로 튀게
         });
       }, delay);
     });
     
-    // 연속으로 여러 번 흔들기
-    for (let i = 1; i < 5; i++) {
+    // 연속으로 더 많이 흔들기
+    for (let i = 1; i < 8; i++) {
       setTimeout(() => {
         allBodies.forEach(body => {
-          const shakeForce = 0.015 * (5 - i) / 5; // 점점 약해지는 흔들림
+          const shakeForce = 0.04 * (8 - i) / 8; // 점점 약해지는 강한 흔들림
           const randomDirection = Math.random() > 0.5 ? 1 : -1;
           
           Matter.Body.applyForce(body, body.position, {
             x: shakeForce * randomDirection,
-            y: 0
+            y: Math.random() * 0.02 - 0.01 // 랜덤한 수직 움직임도 추가
           });
         });
-      }, i * 150);
+      }, i * 120); // 더 빠른 간격
     }
   }
 
