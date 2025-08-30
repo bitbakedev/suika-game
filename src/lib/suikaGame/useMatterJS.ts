@@ -171,6 +171,7 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
     prevPosition.x = fixedItem.position.x;
 
     GuideLine.render.fillStyle = '#ffffff00';
+    GuideLine.render.strokeStyle = '#ffffff00';
     World.remove(engine.world, fixedItem);
     World.remove(engine.world, GameOverLine);
     fixedItem = null;
@@ -178,6 +179,9 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
 
     fixedItemTimeOut = setTimeout(() => {
       GuideLine.render.fillStyle = GuideLineColor;
+      GuideLine.render.strokeStyle = '#ffffff80';
+      GuideLine.render.lineWidth = 2;
+      GuideLine.render.lineDash = [10, 5];
       World.add(engine.world, GameOverLine);
       createFixedItem(props);
     }, 750);
