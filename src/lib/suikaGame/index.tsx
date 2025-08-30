@@ -44,12 +44,6 @@ const SuikaGame = () => {
   return (
     <div className={cx('gameArea')}>
       <div className={cx('topArea')}>
-        <div className={cx('leftButtons')}>
-          <button className={cx('settingsButton')} onClick={handleTryAgain}>
-            ⚙️
-          </button>
-        </div>
-        
         <div className={cx('scoreArea')}>
           <span className={cx('crown')}>👑</span>
           <span className={cx('score')}>{score > bestScore ? score : bestScore}</span>
@@ -70,6 +64,10 @@ const SuikaGame = () => {
           <div id={'canvasWrap'} className={cx('canvasWrap')}/>
         </div>
       </div>
+
+      <FruitPreview onRestart={handleTryAgain} />
+      
+      <GameOverModal isVisible={isGameOver} onClick={handleTryAgain} score={score} />
     </div>
   )
 }
