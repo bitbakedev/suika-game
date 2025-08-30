@@ -191,7 +191,6 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
       GuideLine.forEach(dash => {
         dash.render.fillStyle = GuideLineColor;
       });
-      GuideLine.render.strokeStyle = '#ffffff80';
       World.add(engine.world, GameOverLine);
       createFixedItem(propsRef);
     }, 750);
