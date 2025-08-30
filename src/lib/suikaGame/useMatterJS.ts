@@ -241,6 +241,7 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
               texture: getImgUrl(label),
               xScale: (radius * 2) / 200,
               yScale: (radius * 2) / 200,
+            }
             yScale: (radius * 2) / 200,
           }
         });
