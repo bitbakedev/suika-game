@@ -17,11 +17,11 @@
 .previewWrap {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   height: 100%;
   width: 100%;
-  max-width: 100%;
   gap: 16px;
+  overflow-x: auto;
 }
 
 .restartButton {
@@ -57,7 +57,8 @@
   border-radius: 12px;
   padding: 8px 20px;
   height: 36px;
-  width: 600px;
+  flex: 1;
+  max-width: 600px;
   overflow: visible;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
