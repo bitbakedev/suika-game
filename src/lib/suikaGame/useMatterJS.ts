@@ -336,7 +336,7 @@ const useMatterJS = (props: UseMatterJSProps) => {
       
       props.setScore(0);
     };
-  }, [fireConfetti, fireRapidStarConfetti, score]);
+  }, [fireConfetti, fireRapidStarConfetti]);
 
   const clear = () => {
     // 기존 정리 작업
