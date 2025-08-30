@@ -1,7 +1,7 @@
 import Matter from "matter-js";
 import { getRenderWidth, getRenderHeight } from "./Size";
 
-export const GuideLineColor = '#ffffff60';
+export const GuideLineColor = 'transparent';
 
 export const GuideLine = Matter.Bodies.rectangle(
     getRenderWidth() / 2,
@@ -13,7 +13,10 @@ export const GuideLine = Matter.Bodies.rectangle(
         isSensor: true, 
         collisionFilter: { group: -1 }, 
         render: { 
-            fillStyle: GuideLineColor
+            fillStyle: GuideLineColor,
+            strokeStyle: '#ffffff80',
+            lineWidth: 2,
+            lineDash: [8, 8]
         },
         label: 'GUIDE_LINE'
     }
