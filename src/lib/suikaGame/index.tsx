@@ -124,11 +124,17 @@ const SuikaGame = () => {
           <div className={cx('bestScoreRow')}>
             <div className={cx('crownIcon')}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M4 18h16v-2c0-1-1-2-2-2H6c-1 0-2 1-2 2v2z" fill="#D2691E"/>
-                <circle cx="7" cy="12" r="2" fill="#D2691E"/>
-                <circle cx="12" cy="9" r="2.5" fill="#D2691E"/>
-                <circle cx="17" cy="12" r="2" fill="#D2691E"/>
-                <path d="M5 14l2-2 3 3 3-3 3 3 2-2" stroke="none" fill="#D2691E"/>
+                {/* 왕관 베이스 */}
+                <path d="M5 16c0-1.5 1-2.5 2.5-2.5h9c1.5 0 2.5 1 2.5 2.5v2c0 0.5-0.5 1-1 1H6c-0.5 0-1-0.5-1-1v-2z" fill="#D2691E" stroke="#ffffff" strokeWidth="1"/>
+                
+                {/* 왕관 보석들 - 둥근 형태 */}
+                <circle cx="7" cy="11" r="1.8" fill="#D2691E" stroke="#ffffff" strokeWidth="1"/>
+                <circle cx="12" cy="8.5" r="2.2" fill="#D2691E" stroke="#ffffff" strokeWidth="1"/>
+                <circle cx="17" cy="11" r="1.8" fill="#D2691E" stroke="#ffffff" strokeWidth="1"/>
+                
+                {/* 왕관 연결부 - 부드러운 곡선 */}
+                <path d="M5.2 15.5c0.8-1.2 1.5-2.8 1.8-4.5 0.5-0.3 1.2-0.5 2-0.5s1.5 0.2 2 0.5c0.5 0.3 1.2 0.5 2 0.5s1.5-0.2 2-0.5c0.5-0.3 1.2-0.5 2-0.5s1.5 0.2 2 0.5c0.3 1.7 1 3.3 1.8 4.5" 
+                      stroke="#D2691E" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
             <div className={cx('bestScoreText')}>{score > bestScore ? score : bestScore}</div>
