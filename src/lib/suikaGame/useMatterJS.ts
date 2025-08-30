@@ -27,6 +27,9 @@ const renderOptions = {
   wireframes: false,
   background: '#ffffff40',
   borderRadius: '16px',
+  pixelRatio: window.devicePixelRatio || 2,
+  showAngleIndicator: false,
+  showVelocity: false,
 };
 
 const init = (props: UseMatterJSProps) => {
@@ -34,7 +37,24 @@ const init = (props: UseMatterJSProps) => {
   if (!canvasWrapEl) return;
   while (canvasWrapEl.hasChildNodes() && canvasWrapEl.firstChild) canvasWrapEl.removeChild(canvasWrapEl.firstChild);
   engine.world.gravity.y = 2.0;
-  render = Render.create({ element: canvasWrapEl, engine: engine, options: renderOptions });
+  render = Render.create({ 
+    element: canvasWrapEl, 
+    engine: engine, 
+    options: {
+      ...renderOptions,
+      showDebug: false,
+      showBroadphase: false,
+      showBounds: false,
+      showVelocity: false,
+      showAngleIndicator: false,
+      showSeparations: false,
+      showAxes: false,
+      showPositions: false,
+      showConvexHulls: false,
+      showInternalEdges: false,
+      showMousePosition: false
+    }
+  });
   World.add(engine.world, [...Wall]);
   World.add(engine.world, [GameOverGuideLine, GuideLine]);
   nextFruit = props.nextItem;
@@ -58,8 +78,8 @@ const createFixedItem = ({ setNextItem }: UseMatterJSProps) => {
     render: {
       sprite: {
         texture: getImgUrl(label),
-        xScale: (radius * 2) / 250,
-        yScale: (radius * 2) / 250,
+        xScale: (radius * 2) / 200,
+        yScale: (radius * 2) / 200,
       }
     }
   });
@@ -219,9 +239,9 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
           render: {
             sprite: {
               texture: getImgUrl(label),
-              xScale: (radius * 2) / 250,
-              yScale: (radius * 2) / 250,
-            }
+              xScale: (radius * 2) / 200,
+              yScale: (radius * 2) / 200,
+            yScale: (radius * 2) / 200,
           }
         });
 
