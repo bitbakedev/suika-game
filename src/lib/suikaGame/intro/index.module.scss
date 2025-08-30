@@ -9,6 +9,8 @@
   height: 100%;
   background: linear-gradient(0deg, #f5f1c4, #cfa76f, #a0633b);
   user-select: none;
+  font-family: 'Helvetica Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'SF Pro Display', system-ui, sans-serif;
+  font-weight: 900;
 
   .listWrap {
     animation: spin 50s linear infinite; /* 빙글빙글 애니메이션 추가 */
@@ -34,12 +36,19 @@
     height: 100%;
 
     .btn {
-      font-family: 'Patrick Hand', 'Pretendard';
+      font-family: 'Helvetica Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'SF Pro Display', system-ui, sans-serif;
       font-size: 2.5em;
-      font-weight: 700;
+      font-weight: 900;
       color: #ffffff;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      letter-spacing: 2px;
       transition: transform 0.4s ease-in-out;
       cursor: pointer;
+      
+      &:hover {
+        transform: scale(1.05);
+        text-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+      }
     }
   }
 
@@ -47,14 +56,18 @@
     position: fixed;
     bottom: 1.5em;
     font-size: 1em;
+    font-weight: 900;
     color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
   .version {
     position: fixed;
     bottom: 1em;
     font-size: 0.5em;
+    font-weight: 900;
     color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 }
 

@@ -8,33 +8,46 @@
   height: 100%;
   background: #000000cc;
   user-select: none;
-  font-family: 'Patrick Hand', 'Pretendard';
+  font-family: 'Helvetica Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'SF Pro Display', system-ui, sans-serif;
 
   .text {
-    font-family: 'Patrick Hand', 'Pretendard';
+    font-family: 'Helvetica Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'SF Pro Display', system-ui, sans-serif;
     font-size: 4em;
-    font-weight: 700;
+    font-weight: 900;
     color: #fff;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    letter-spacing: 2px;
   }
 
   .score {
     margin-top: .3em;
-    font-family: 'Patrick Hand', 'Pretendard';
+    font-family: 'Helvetica Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'SF Pro Display', system-ui, sans-serif;
     font-size: 2em;
+    font-weight: 900;
     color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 1px;
   }
 
   .btn {
     padding: .5em .7em;
     margin-top: .6em;
     background: #fff;
-
-    font-family: 'Patrick Hand', 'Pretendard';
+    font-family: 'Helvetica Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'SF Pro Display', system-ui, sans-serif;
     font-size: 2em;
-    font-weight: 700;
+    font-weight: 900;
     color: #000;
     border-radius: 36px;
     cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
   }
   
   .linkArea {
@@ -43,14 +56,18 @@
 
     .formsLink {
       font-size: 1em;
+      font-weight: 900;
       color: #ffffff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
   
     .shareaBtn {
       position: relative;
       margin-left: 12px;
       font-size: 1em;
+      font-weight: 900;
       color: #ffffff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
       cursor: pointer;
   
       &::before {
@@ -73,9 +90,11 @@
     bottom: 30px;
     padding: 1.5em;
     font-size: 1em;
+    font-weight: 900;
     border-radius: 2px;
     color: #ffffff;
     background: #111;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
     &.show {
       visibility: visible;
