@@ -141,6 +141,10 @@ const SuikaGame = () => {
         ×
       </button>
       
+      <button className={cx('closeButton')} onClick={handleClose}>
+        ×
+      </button>
+      
       <div className={cx('gameWrap')}>
         <div className={cx('canvasArea')}>
           <div id={'canvasWrap'} className={cx('canvasWrap', { shaking: isCanvasShaking })}/>
