@@ -12,7 +12,6 @@ export enum Fruit {
   COCONUT = "COCONUT",
   MELON = "MELON",
   WATERMELON = "WATERMELON",
-  GOLDWATERMELON = "GOLDWATERMELON",
 }
 
 export type FruitType = keyof typeof Fruit;
@@ -20,29 +19,27 @@ export type FruitType = keyof typeof Fruit;
 export const getFruitFeature = (fruit: FruitType) => {
   switch (fruit) {
     case Fruit.BLUEBERRY:
-      return { radius: getRenderWidth() / 24, mass: 0.8, label: Fruit.BLUEBERRY, score: 1 };
+      return { radius: getRenderWidth() / 24, mass: 0.8, label: Fruit.BLUEBERRY, score: 2 };
     case Fruit.STRAWBERRY:
-      return { radius: getRenderWidth() / 18, mass: 1, label: Fruit.STRAWBERRY, score: 3 };
+      return { radius: getRenderWidth() / 18, mass: 1, label: Fruit.STRAWBERRY, score: 4 };
     case Fruit.TANGERINE:
-      return { radius: getRenderWidth() / 12, mass: 1, label: Fruit.TANGERINE, score: 6 };
+      return { radius: getRenderWidth() / 12, mass: 1, label: Fruit.TANGERINE, score: 8 };
     case Fruit.TOMATO:
-      return { radius: getRenderWidth() / 10, mass: 1, label: Fruit.TOMATO, score: 10 };
+      return { radius: getRenderWidth() / 10, mass: 1, label: Fruit.TOMATO, score: 16 };
     case Fruit.AVOCADO:
-      return { radius: getRenderWidth() / 8, mass: 1, label: Fruit.AVOCADO, score: 15 };
+      return { radius: getRenderWidth() / 8, mass: 1, label: Fruit.AVOCADO, score: 32 };
     case Fruit.KOREANMELON:
-      return { radius: getRenderWidth() / 7, mass: 1, label: Fruit.KOREANMELON, score: 21 };
+      return { radius: getRenderWidth() / 7, mass: 1, label: Fruit.KOREANMELON, score: 64 };
     case Fruit.APPLE:
-      return { radius: getRenderWidth() / 6, mass: 1, label: Fruit.APPLE, score: 28 };
+      return { radius: getRenderWidth() / 6, mass: 1, label: Fruit.APPLE, score: 128 };
     case Fruit.PEACH:
-      return { radius: getRenderWidth() / 5.3, mass: 1, label: Fruit.PEACH, score: 36 };
+      return { radius: getRenderWidth() / 5.3, mass: 1, label: Fruit.PEACH, score: 256 };
     case Fruit.COCONUT:
-      return { radius: getRenderWidth() / 4.6, mass: 1, label: Fruit.COCONUT, score: 45 };
+      return { radius: getRenderWidth() / 4.6, mass: 1, label: Fruit.COCONUT, score: 512 };
     case Fruit.MELON:
-      return { radius: getRenderWidth() / 3.95, mass: 1, label: Fruit.MELON, score: 55 };
+      return { radius: getRenderWidth() / 3.95, mass: 1, label: Fruit.MELON, score: 1024 };
     case Fruit.WATERMELON:
-      return { radius: getRenderWidth() / 3.5, mass: 1, label: Fruit.WATERMELON, score: 66 };
-    case Fruit.GOLDWATERMELON:
-      return { radius: getRenderWidth() / 3.5, mass: 1,label: Fruit.GOLDWATERMELON, score: 100 };
+      return { radius: getRenderWidth() / 3.5, mass: 1, label: Fruit.WATERMELON, score: 100 };
   }
 }
 
@@ -61,8 +58,13 @@ export const getNextFruitFeature = (currentFruit: Fruit) => {
     return null;
   }
 
+  // 수박이 마지막 과일이므로 더 이상 합칠 수 없음
+  if (currentFruit === Fruit.WATERMELON) {
+    return null;
+  }
+
   // 다음 과일의 순서 계산
-  const nextIndex = (currentIndex + 1) % Object.values(Fruit).length;
+  const nextIndex = currentIndex + 1;
 
   // 다음 과일의 종류 가져오기
   const nextFruit = Object.values(Fruit)[nextIndex];

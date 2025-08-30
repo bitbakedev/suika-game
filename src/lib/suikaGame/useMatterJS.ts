@@ -201,7 +201,7 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
       const labelB = bodyB.label as Fruit;
 
       if (bodyA.isSensor || bodyB.isSensor) return;
-      if (labelA === Fruit.GOLDWATERMELON && labelB === Fruit.GOLDWATERMELON) return;
+      if (labelA === Fruit.WATERMELON && labelB === Fruit.WATERMELON) return;
 
       // 이미 합치는 중이면 무시
       if (prevMergingFruitIds.includes(bodyA.id) || prevMergingFruitIds.includes(bodyB.id)) return prevMergingFruitIds = [];
@@ -219,16 +219,20 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
 
         // 새로운 Fruit 생성 (크기가 한 사이즈 큰 것)
         const feature = getNextFruitFeature(labelA); // 이 함수는 한 사이즈 큰 Fruit 특성을 반환하도록 수정
+        
+        // 수박이 만들어지면 별 이펙트
+        if(labelA === Fruit.MELON) effects.fireRapidStarConfetti();
+        
+        // 수박끼리 합쳐지면 더 이상 진행하지 않음
+        if (!feature) return;
+        
         const label = feature?.label as Fruit;
         const radius = feature?.radius || 1;
         const mass = feature?.mass || 1;
         const score = feature?.score || 0;
 
-        // 수박이 만들어지면 폭죽 이펙트
-        if(label === Fruit.WATERMELON) effects.fireConfetti();
-
-        // 황금 수박이 만들어지면 별 이펙트
-        if(label === Fruit.GOLDWATERMELON) effects.fireRapidStarConfetti();
+        // 수박이 만들어지면 폭죽 이펙트 (멜론 2개가 합쳐져서 수박이 될 때)
+        if(labelA === Fruit.MELON && label === Fruit.WATERMELON) effects.fireConfetti();
 
         const newFruit = Matter.Bodies.circle(midX, midY, radius, {
           isStatic: false,
