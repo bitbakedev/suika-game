@@ -44,20 +44,29 @@ const SuikaGame = () => {
   return (
     <div className={cx('gameArea')}>
       <div className={cx('topArea')}>
-        <div className={cx('scoreArea')}>
-          <span className={cx('crown')}>👑</span>
-          <span className={cx('score')}>{score > bestScore ? score : bestScore}</span>
+        <div className={cx('leftSection')}>
+          <div className={cx('bestScoreCircle')}>
+            {score > bestScore ? score : bestScore}
+          </div>
+          <div className={cx('currentScoreCircle')}>
+            {score}
+          </div>
         </div>
         
-        <button className={cx('closeButton')} onClick={handleClose}>
-          ×
-        </button>
+        <div className={cx('centerSection')}>
+          <div className={cx('crownIcon')}>👑</div>
+          <div className={cx('mainScore')}>{score}</div>
+        </div>
         
-        <div className={cx('nextArea')}>
+        <div className={cx('rightSection')}>
           <div className={cx('nextFruit')} style={{ backgroundImage: `url(${require('../../resource/' + nextItem + '.png')})` }} />
-          <span className={cx('nextText')}>NEXT</span>
+          <div className={cx('nextText')}>NEXT</div>
         </div>
       </div>
+      
+      <button className={cx('closeButton')} onClick={handleClose}>
+        ×
+      </button>
       
       <div className={cx('gameWrap')}>
         <div className={cx('canvasArea')}>

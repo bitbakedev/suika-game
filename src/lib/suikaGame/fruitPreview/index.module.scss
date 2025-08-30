@@ -3,43 +3,45 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 80px;
+  height: 100px;
   background: #FFB384;
-  border-top: 1px solid #CA661B;
+  border-top: 2px solid rgba(255, 255, 255, 0.2);
   z-index: 50;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 16px;
+  padding: 0 20px;
   box-sizing: border-box;
 }
 
 .previewWrap {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   height: 100%;
   width: 100%;
-  max-width: 400px;
+  max-width: 100%;
+  gap: 16px;
 }
 
 .settingsButton {
-  width: 35px;
-  height: 35px;
-  border-radius: 6px;
-  background: #CA661B;
-  border: 1px solid #92460A;
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: #D2691E;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   color: white;
-  font-size: 18px;
+  font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
   flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   
   &:hover {
-    background: #B85A15;
+    background: #CD853F;
     transform: scale(1.05);
   }
 }
@@ -48,23 +50,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  background: #CA661B;
-  border: 1px solid #92460A;
-  border-radius: 6px;
-  padding: 6px 12px;
-  height: 35px;
+  gap: 4px;
+  background: #D2691E;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 25px;
+  padding: 8px 16px;
+  height: 50px;
   flex: 1;
-  margin-left: 8px;
+  max-width: 600px;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .fruitItem {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   flex-shrink: 0;
   transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
 }

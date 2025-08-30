@@ -1,5 +1,5 @@
 export const getRenderHeight = () => {
-    const maxHeight = window.innerHeight - 160; // 상단 80px + 하단 80px
+    const maxHeight = window.innerHeight - 220; // 상단 120px + 하단 100px
     const screenHeight = window.innerHeight;
     const screenWidth = window.innerWidth - 20;
     const maxWidth = screenHeight * 4 / 7 - 8;
