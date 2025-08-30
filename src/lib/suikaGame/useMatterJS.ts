@@ -79,8 +79,8 @@ const createFixedItem = (propsRef: React.RefObject<UseMatterJSProps>) => {
     render: {
       sprite: {
         texture: getImgUrl(label),
-        xScale: (radius * 2) / 200,
-        yScale: (radius * 2) / 200,
+        xScale: (radius * 2) / 250,
+        yScale: (radius * 2) / 250,
       }
     }
   });
@@ -245,8 +245,8 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
           render: {
             sprite: {
               texture: getImgUrl(label),
-              xScale: (radius * 2) / 200,
-              yScale: (radius * 2) / 200,
+              xScale: (radius * 2) / 250,
+              yScale: (radius * 2) / 250,
             }
           }
         });
