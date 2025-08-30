@@ -20,3 +20,4 @@ export const GuideLine = Matter.Bodies.rectangle(
         },
         label: 'GUIDE_LINE'
     }
+)
