@@ -4,7 +4,6 @@ import classNames from "classnames/bind";
 import useMatterJS from "./useMatterJS";
 import { Fruit, getRandomFruitFeature } from './object/Fruit';
 import GameOverModal from './gameOverModal';
-import Intro from './intro';
 import Header from './header';
 import Advertisement from './advertisement';
 import Ranking from './ranking';
@@ -16,7 +15,6 @@ const SuikaGame = () => {
   const [bestScore, setBestScore] = useState(0);
   const [score, setScore] = useState(0);
   const [nextItem, setNextItem] = useState<Fruit>(getRandomFruitFeature()?.label as Fruit);
-  const [isStart, setIsStart] = useState<boolean>(true);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [showRanking, setShowRanking] = useState<boolean>(false);
   const [showRankingFromBack, setShowRankingFromBack] = useState<boolean>(false);
@@ -36,7 +34,7 @@ const SuikaGame = () => {
         localStorage.setItem('bestScore', score.toString());
       }
     }
-  }, [isGameOver]);
+  }, [isGameOver, score]);
 
   const handleTryAgain = () => {
     setScore(0);
