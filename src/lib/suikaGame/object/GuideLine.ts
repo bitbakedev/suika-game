@@ -13,10 +13,7 @@ export const GuideLine = Matter.Bodies.rectangle(
         isSensor: true, 
         collisionFilter: { group: -1 }, 
         render: { 
-            fillStyle: GuideLineColor,
-            strokeStyle: '#ffffff80',
-            lineWidth: 2,
-            lineDash: [10, 5]
+            fillStyle: GuideLineColor
         },
         label: 'GUIDE_LINE'
     }

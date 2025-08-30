@@ -1,6 +1,6 @@
 import Matter from 'matter-js';
-import { SetStateAction, useEffect } from "react";
-import Wall, { WALL_BACK } from "./object/Wall";
+import { SetStateAction, useEffect, useRef } from "react";
+import Wall from "./object/Wall";
 import { Fruit, getFruitFeature, getNextFruitFeature, getRandomFruitFeature } from "./object/Fruit";
 import { getRenderHeight, getRenderWidth } from "./object/Size";
 import { GameOverLine, GameOverGuideLine } from './object/GameOverLine';
@@ -32,7 +32,7 @@ const renderOptions = {
   showVelocity: false,
 };
 
-const init = (props: UseMatterJSProps) => {
+const init = (propsRef: React.RefObject<UseMatterJSProps>) => {
   const canvasWrapEl = document.getElementById('canvasWrap');
   if (!canvasWrapEl) return;
   while (canvasWrapEl.hasChildNodes() && canvasWrapEl.firstChild) canvasWrapEl.removeChild(canvasWrapEl.firstChild);
@@ -57,13 +57,14 @@ const init = (props: UseMatterJSProps) => {
   });
   World.add(engine.world, [...Wall]);
   World.add(engine.world, [GameOverGuideLine, GuideLine]);
-  nextFruit = props.nextItem;
-  createFixedItem(props);
+  nextFruit = propsRef.current?.nextItem || null;
+  createFixedItem(propsRef);
 };
 
-const createFixedItem = ({ setNextItem }: UseMatterJSProps) => {
+const createFixedItem = (propsRef: React.RefObject<UseMatterJSProps>) => {
   if (fixedItem) return;
   if (!nextFruit) return;
+  if (!propsRef.current) return;
   const feature = getFruitFeature(nextFruit);
   const label = feature?.label as Fruit;
   const radius = feature?.radius || 1;
@@ -87,11 +88,12 @@ const createFixedItem = ({ setNextItem }: UseMatterJSProps) => {
 
   const newNextItem = getRandomFruitFeature()?.label as Fruit;
   nextFruit = newNextItem;
-  setNextItem(newNextItem);
+  propsRef.current.setNextItem(newNextItem);
 }
 
-const handleGameOver = (props: UseMatterJSProps) => {
-  props.setIsGameOver(true);
+const handleGameOver = (propsRef: React.RefObject<UseMatterJSProps>) => {
+  if (!propsRef.current) return;
+  propsRef.current.setIsGameOver(true);
   requestAnimation && cancelAnimationFrame(requestAnimation);
 }
 
@@ -114,7 +116,7 @@ const setPositionFixedItem = (event: any) => {
   })
 }
 
-const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fireRapidStarConfetti: () => void }) => {
+const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfetti: () => void, fireRapidStarConfetti: () => void }) => {
   if (!render) return;
 
   const mouse = Mouse.create(render.canvas);
@@ -170,8 +172,7 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
 
     prevPosition.x = fixedItem.position.x;
 
-    GuideLine.render.fillStyle = '#ffffff00';
-    GuideLine.render.strokeStyle = '#ffffff00';
+    GuideLine.render.fillStyle = 'transparent';
     World.remove(engine.world, fixedItem);
     World.remove(engine.world, GameOverLine);
     fixedItem = null;
@@ -179,11 +180,8 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
 
     fixedItemTimeOut = setTimeout(() => {
       GuideLine.render.fillStyle = GuideLineColor;
-      GuideLine.render.strokeStyle = '#ffffff80';
-      GuideLine.render.lineWidth = 2;
-      GuideLine.render.lineDash = [10, 5];
       World.add(engine.world, GameOverLine);
-      createFixedItem(props);
+      createFixedItem(propsRef);
     }, 750);
   });
 
@@ -194,7 +192,7 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
       const bodyB = pair.bodyB;
       
       if (bodyA.label === GameOverLine.label || bodyB.label === GameOverLine.label) {
-        handleGameOver(props);
+        handleGameOver(propsRef);
         return;
       }
 
@@ -254,7 +252,9 @@ const event = (props: UseMatterJSProps, effects: { fireConfetti: () => void, fir
         });
 
         World.add(engine.world, newFruit);
-        props.setScore(prev => prev + score);
+        if (propsRef.current) {
+          propsRef.current.setScore(prev => prev + score);
+        }
       }
     });
   });
@@ -290,22 +290,30 @@ interface UseMatterJSProps {
 
 const useMatterJS = (props: UseMatterJSProps) => {
   const { fireConfetti, fireRapidStarConfetti } = useConfetti();
+  const propsRef = useRef(props);
+
+  // Update props ref on every render
+  useEffect(() => {
+    propsRef.current = props;
+  });
 
   useEffect(() => {
-    init(props);
-    event(props, { fireConfetti, fireRapidStarConfetti });
+    init(propsRef);
+    event(propsRef, { fireConfetti, fireRapidStarConfetti });
     run();
 
     return (() => {
-      props.setScore(0);
+      if (propsRef.current) {
+        propsRef.current.setScore(0);
+      }
     })
-  }, []);
+  }, [fireConfetti, fireRapidStarConfetti]);
 
   const clear = () => {
     fixedItem = null;
     engine = Engine.create();
-    init(props);
-    event(props, { fireConfetti, fireRapidStarConfetti });
+    init(propsRef);
+    event(propsRef, { fireConfetti, fireRapidStarConfetti });
     run();
   }
 
