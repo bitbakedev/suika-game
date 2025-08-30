@@ -17,7 +17,7 @@ const SuikaGame = () => {
   const [shakeItemCount, setShakeItemCount] = useState<number>(2);
   const [isItemActive, setIsItemActive] = useState<boolean>(false);
   const [isShakeActive, setIsShakeActive] = useState<boolean>(false);
-  const [isScreenShaking, setIsScreenShaking] = useState<boolean>(false);
+  const [isCanvasShaking, setIsCanvasShaking] = useState<boolean>(false);
 
   const { clear, removeSmallFruits, shakeCanvas } = useMatterJS({ 
     score, 
@@ -50,7 +50,7 @@ const SuikaGame = () => {
     setShakeItemCount(2);
     setIsItemActive(false);
     setIsShakeActive(false);
-    setIsScreenShaking(false);
+    setIsCanvasShaking(false);
     clear();
   }
 
@@ -75,19 +75,19 @@ const SuikaGame = () => {
     if (shakeItemCount > 0 && !isGameOver) {
       setShakeItemCount(prev => prev - 1);
       setIsShakeActive(true);
-      setIsScreenShaking(true);
+      setIsCanvasShaking(true);
       shakeCanvas();
       
       // 이펙트 애니메이션
       setTimeout(() => {
         setIsShakeActive(false);
-        setIsScreenShaking(false);
+        setIsCanvasShaking(false);
       }, 1000);
     }
   }
 
   return (
-    <div className={cx('gameArea', { shaking: isScreenShaking })}>
+    <div className={cx('gameArea')}>
       <div className={cx('topArea')}>
         <div className={cx('leftSection')}>
           <div 
@@ -133,7 +133,7 @@ const SuikaGame = () => {
       
       <div className={cx('gameWrap')}>
         <div className={cx('canvasArea')}>
-          <div id={'canvasWrap'} className={cx('canvasWrap')}/>
+          <div id={'canvasWrap'} className={cx('canvasWrap', { shaking: isCanvasShaking })}/>
         </div>
       </div>
 
