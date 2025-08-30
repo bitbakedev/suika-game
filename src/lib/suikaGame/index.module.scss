@@ -6,6 +6,7 @@
   height: 100vh;
   background: linear-gradient(180deg, #FFE4B5 0%, #DEB887 50%, #D2B48C 100%);
   position: relative;
+  padding-bottom: 80px; /* 하단 미리보기 공간 확보 */
 }
 
 .topArea {
@@ -91,9 +92,9 @@
   align-items: center;
   justify-content: center;
   padding: 0 10px;
-  padding-bottom: 80px; /* 하단 미리보기 공간 확보 */
   margin: 0 auto;
   width: 100%;
+  min-height: 0; /* flex 아이템이 줄어들 수 있도록 */
 }
 
 .canvasArea {
