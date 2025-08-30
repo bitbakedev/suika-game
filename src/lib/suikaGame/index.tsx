@@ -95,14 +95,27 @@ const SuikaGame = () => {
             onClick={handleItemUse}
             title={`아이템 사용 (${itemCount}개 남음)`}
           >
-            {itemCount}
+            <div className={cx('itemIcon')}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <circle cx="8" cy="8" r="3" fill="#4F46E5"/>
+                <circle cx="16" cy="8" r="3" fill="#EF4444"/>
+                <path d="M8 14l8 0" stroke="#D2691E" strokeWidth="3" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <div className={cx('itemCount')}>{itemCount}</div>
           </div>
           <div 
             className={cx('bestScoreCircle', { active: isShakeActive })} 
             onClick={handleShakeUse}
             title={`흔들기 아이템 (${shakeItemCount}개 남음)`}
           >
-            🌪️
+            <div className={cx('shakeIcon')}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M3 12h3m3-3h3m-3 6h3m3-3h3" stroke="#D2691E" strokeWidth="3" strokeLinecap="round"/>
+                <path d="M6 6l3 3m6-3l-3 3m-6 6l3-3m6 3l-3-3" stroke="#D2691E" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <div className={cx('itemCount')}>{shakeItemCount}</div>
           </div>
         </div>
         
