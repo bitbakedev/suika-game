@@ -4,7 +4,7 @@ import classNames from "classnames/bind";
 import useMatterJS from "./useMatterJS";
 import { Fruit, getRandomFruitFeature } from './object/Fruit';
 import GameOverModal from './gameOverModal';
-import Header from './header';
+import FruitPreview from './fruitPreview';
 
 const cx = classNames.bind(styles);
 
@@ -38,24 +38,40 @@ const SuikaGame = () => {
   }
 
   const handleClose = () => {
-    // 게임 종료 로직 (예: 부모 컴포넌트로 알림)
     window.close();
   }
 
   return (
     <div className={cx('gameArea')}>
-      <div className={cx('gameWrap')}>
+      <div className={cx('topArea')}>
+        <div className={cx('leftButtons')}>
+          <button className={cx('settingsButton')} onClick={handleTryAgain}>
+            ⚙️
+          </button>
+        </div>
+        
+        <div className={cx('scoreArea')}>
+          <span className={cx('crown')}>👑</span>
+          <span className={cx('score')}>{score > bestScore ? score : bestScore}</span>
+        </div>
+        
         <button className={cx('closeButton')} onClick={handleClose}>
           ×
         </button>
-        <button className={cx('restartButton')} onClick={handleTryAgain}>
-          ↻
-        </button>
+        
+        <div className={cx('nextArea')}>
+          <div className={cx('nextFruit')} style={{ backgroundImage: `url(${require('../../resource/' + nextItem + '.png')})` }} />
+          <span className={cx('nextText')}>NEXT</span>
+        </div>
+      </div>
+      
+      <div className={cx('gameWrap')}>
         <div className={cx('canvasArea')}>
-          <Header bestScore={bestScore} score={score} nextItem={nextItem}/>
           <div id={'canvasWrap'} className={cx('canvasWrap')}/>
         </div>
       </div>
+      
+      <FruitPreview />
 
       <GameOverModal isVisible={isGameOver} onClick={handleTryAgain} score={score} />
     </div>
