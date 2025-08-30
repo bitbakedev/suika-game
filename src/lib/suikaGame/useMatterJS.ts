@@ -332,7 +332,8 @@ const useMatterJS = (props: UseMatterJSProps) => {
   const removeSmallFruits = () => {
     const bodiesToRemove = engine.world.bodies.filter(body => {
       const label = body.label as Fruit;
-      return label === Fruit.STRAWBERRY || label === Fruit.BLUEBERRY;
+      return (label === Fruit.STRAWBERRY || label === Fruit.BLUEBERRY) && 
+             !body.isStatic && !body.isSensor;
     });
     
     // 제거된 과일이 있을 때만 효과 실행
