@@ -14,8 +14,8 @@ const FruitPreview = ({ onRestart }: FruitPreviewProps) => {
   return (
     <div className={cx('previewArea')}>
       <div className={cx('previewWrap')}>
-        <button className={cx('settingsButton')} onClick={onRestart}>
-          ⚙️
+        <button className={cx('restartButton')} onClick={onRestart}>
+          ↻
         </button>
         <div className={cx('fruitContainer')}>
           {fruits.map((fruit, index) => (
