@@ -28,21 +28,22 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(139, 69, 19, 0.8);
-  color: #fff;
+  background: #f5f5f5;
+  color: #666;
   font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 2px solid #e0e0e0;
   margin-right: 12px;
   flex-shrink: 0;
   
   &:hover {
-    background: rgba(139, 69, 19, 1);
-    transform: scale(1.05);
+    background: #e8e8e8;
+    border-color: #d0d0d0;
+    color: #333;
   }
 }
 
