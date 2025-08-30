@@ -13,11 +13,12 @@
 .previewWrap {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 4px;
   height: 100%;
-  padding: 0 20px;
-  overflow-x: auto;
+  padding: 0 10px;
+  overflow: hidden;
+  flex-wrap: nowrap;
   
   &::-webkit-scrollbar {
     display: none;
@@ -39,6 +40,7 @@
   border: 2px solid #e0e0e0;
   margin-right: 12px;
   flex-shrink: 0;
+  order: -1;
   
   &:hover {
     background: #e8e8e8;
@@ -48,8 +50,8 @@
 }
 
 .fruitItem {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -60,6 +62,7 @@
   transition: all 0.3s ease;
   animation: bounceIn 0.6s ease-out;
   flex-shrink: 0;
+  min-width: 16px;
   
   &:hover {
     transform: scale(1.1);
