@@ -123,16 +123,16 @@ const SuikaGame = () => {
             <div className={cx('nextText')}>NEXT</div>
           </div>
         </div>
+        <div 
+          className={cx('shakeItemCircle', { active: isShakeItemActive })} 
+          onClick={handleShakeItem}
+          title={`흔들기 아이템 사용 (${shakeItemCount}개 남음)`}
+        >
+          {shakeItemCount}
+        </div>
       </div>
       
       <button className={cx('closeButton')} onClick={handleClose}>
-        ×
-      </button>
-      
-      <div className={cx('gameWrap')}>
-        <div className={cx('canvasArea')}>
-          <div id={'canvasWrap'} className={cx('canvasWrap')}/>
-        </div>
       </div>
 
       <FruitPreview onRestart={handleTryAgain} />
