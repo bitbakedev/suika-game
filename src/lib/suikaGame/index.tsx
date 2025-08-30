@@ -97,12 +97,12 @@ const SuikaGame = () => {
           >
             <div className={cx('itemIcon')}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <circle cx="8" cy="8" r="3" fill="#4F46E5"/>
-                <circle cx="16" cy="8" r="3" fill="#EF4444"/>
-                <path d="M8 14l8 0" stroke="#D2691E" strokeWidth="3" strokeLinecap="round"/>
+                <circle cx="7" cy="7" r="4" fill="#4F46E5"/>
+                <circle cx="17" cy="7" r="4" fill="#EF4444"/>
+                <path d="M4 16l16 0" stroke="#D2691E" strokeWidth="4" strokeLinecap="round"/>
+                <path d="M6 18l12 0" stroke="#D2691E" strokeWidth="2" strokeLinecap="round"/>
               </svg>
             </div>
-            <div className={cx('itemCount')}>{itemCount}</div>
           </div>
           <div 
             className={cx('bestScoreCircle', { active: isShakeActive })} 
@@ -111,11 +111,11 @@ const SuikaGame = () => {
           >
             <div className={cx('shakeIcon')}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M3 12h3m3-3h3m-3 6h3m3-3h3" stroke="#D2691E" strokeWidth="3" strokeLinecap="round"/>
-                <path d="M6 6l3 3m6-3l-3 3m-6 6l3-3m6 3l-3-3" stroke="#D2691E" strokeWidth="2" strokeLinecap="round"/>
+                <path d="M6 8l3 3 3-3 3 3 3-3" stroke="#D2691E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M6 12l3-3 3 3 3-3 3 3" stroke="#D2691E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M6 16l3-3 3 3 3-3 3 3" stroke="#D2691E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <div className={cx('itemCount')}>{shakeItemCount}</div>
           </div>
         </div>
         
