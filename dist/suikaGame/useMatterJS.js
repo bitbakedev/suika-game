@@ -42,7 +42,7 @@ const init = (propsRef) => {
         options: Object.assign(Object.assign({}, renderOptions), { showDebug: false, showBroadphase: false, showBounds: false, showVelocity: false, showAngleIndicator: false, showSeparations: false, showAxes: false, showPositions: false, showConvexHulls: false, showInternalEdges: false, showMousePosition: false })
     });
     World.add(engine.world, [...Wall]);
-    World.add(engine.world, [GameOverGuideLine, GuideLine]);
+    World.add(engine.world, [GameOverGuideLine, ...GuideLine]);
     nextFruit = ((_a = propsRef.current) === null || _a === void 0 ? void 0 : _a.nextItem) || null;
     createFixedItem(propsRef);
 };
@@ -96,9 +96,12 @@ const setPositionFixedItem = (event) => {
         x: clamp(event.mouse.position.x, minX, maxX),
         y: fixedItem.position.y,
     });
-    Matter.Body.setPosition(GuideLine, {
-        x: clamp(event.mouse.position.x, minX, maxX),
-        y: GuideLine.position.y,
+    // 모든 대시 라인들의 위치 업데이트
+    GuideLine.forEach(dash => {
+        Matter.Body.setPosition(dash, {
+            x: clamp(event.mouse.position.x, minX, maxX),
+            y: dash.position.y,
+        });
     });
 };
 const event = (propsRef, effects) => {
@@ -154,13 +157,19 @@ const event = (propsRef, effects) => {
             },
         });
         prevPosition.x = fixedItem.position.x;
-        GuideLine.render.fillStyle = 'transparent';
+        // 모든 대시 라인들을 투명하게 만들기
+        GuideLine.forEach(dash => {
+            dash.render.fillStyle = 'transparent';
+        });
         World.remove(engine.world, fixedItem);
         World.remove(engine.world, GameOverLine);
         fixedItem = null;
         World.add(engine.world, newItem);
         fixedItemTimeOut = setTimeout(() => {
-            GuideLine.render.fillStyle = GuideLineColor;
+            // 모든 대시 라인들을 다시 보이게 만들기
+            GuideLine.forEach(dash => {
+                dash.render.fillStyle = GuideLineColor;
+            });
             World.add(engine.world, GameOverLine);
             createFixedItem(propsRef);
         }, 750);
@@ -273,7 +282,8 @@ const useMatterJS = (props) => {
     const removeSmallFruits = () => {
         const bodiesToRemove = engine.world.bodies.filter(body => {
             const label = body.label;
-            return label === Fruit.STRAWBERRY || label === Fruit.BLUEBERRY;
+            return (label === Fruit.STRAWBERRY || label === Fruit.BLUEBERRY) &&
+                !body.isStatic && !body.isSensor;
         });
         // 제거된 과일이 있을 때만 효과 실행
         if (bodiesToRemove.length > 0) {
