@@ -110,17 +110,12 @@ const SuikaGame = () => {
             title={`흔들기 아이템 (${shakeItemCount}개 남음)`}
           >
             <div className={cx('shakeIcon')}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M8 12c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4z" fill="#D2691E"/>
-                <path d="M12 2l2 4-2-1-2 1 2-4z" fill="#D2691E"/>
-                <path d="M12 22l-2-4 2 1 2-1-2 4z" fill="#D2691E"/>
-                <path d="M2 12l4-2-1 2 1 2-4-2z" fill="#D2691E"/>
-                <path d="M22 12l-4 2 1-2-1-2 4 2z" fill="#D2691E"/>
-                <path d="M5.64 5.64l2.83 2.83-.71-.71.71.71-2.83-2.83z" fill="#D2691E"/>
-                <path d="M18.36 18.36l-2.83-2.83.71.71-.71-.71 2.83 2.83z" fill="#D2691E"/>
-                <path d="M5.64 18.36l2.83-2.83-.71.71.71-.71-2.83 2.83z" fill="#D2691E"/>
-                <path d="M18.36 5.64l-2.83 2.83.71-.71-.71.71 2.83-2.83z" fill="#D2691E"/>
-              </svg>
+              <img 
+                src={require('../../resource/shake_shaker_icon_embedded.svg')} 
+                alt="shake icon" 
+                width="20" 
+                height="20"
+              />
             </div>
           </div>
         </div>
