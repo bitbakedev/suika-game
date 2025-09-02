@@ -110,11 +110,7 @@ const SuikaGame = () => {
             title={`흔들기 아이템 (${shakeItemCount}개 남음)`}
           >
             <div className={cx('shakeIcon')}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M12 3c-3 0-5 2-5 5s2 5 5 5c2 0 4-1 4-3s-1-3-3-3c-1 0-2 1-2 2" stroke="#D2691E" strokeWidth="3" strokeLinecap="round" fill="none"/>
-                <path d="M12 13c2 0 4 1 4 3s-2 3-4 3c-3 0-5-2-5-5" stroke="#D2691E" strokeWidth="3" strokeLinecap="round" fill="none"/>
-                <circle cx="12" cy="12" r="1" fill="#D2691E"/>
-              </svg>
+              <img src={require('../../resource/shake_ icon.png')} alt="흔들기" width="20" height="20" />
             </div>
           </div>
         </div>
