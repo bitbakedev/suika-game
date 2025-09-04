@@ -162,10 +162,10 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
     const newItem = Matter.Bodies.circle(fixedItem.position.x, fixedItem.position.y, radius, {
       isStatic: false,
       label: label,
-      restitution: 0.3,
+      restitution: 0.1,
       mass: mass,
-      friction: 0.6,
-      frictionAir: 0.005,
+      friction: 0.8,
+      frictionAir: 0.01,
       render: {
         sprite: {
           texture: getImgUrl(label),
@@ -250,10 +250,10 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
         const newFruit = Matter.Bodies.circle(midX, midY, radius, {
           isStatic: false,
           label: label,
-          restitution: 0.3,
+          restitution: 0.1,
           mass: mass,
-          friction: 0.6,
-          frictionAir: 0.005,
+          friction: 0.8,
+          frictionAir: 0.01,
           render: {
             sprite: {
               texture: getImgUrl(label),
