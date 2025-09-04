@@ -8,7 +8,15 @@ import { GuideLine, GuideLineColor } from './object/GuideLine';
 import useConfetti from "./useConfetti";
 const { Engine, Render, World, Mouse, MouseConstraint } = Matter;
 const frameInterval = 1000 / 60; // 60fps
-const getImgUrl = (fruit) => require('../../resource/' + fruit + '.png');
+const getImgUrl = (fruit) => {
+    if (fruit === Fruit.BLUEBERRY) {
+        return require('../../resource/BREAD1.png');
+    }
+    if (fruit === Fruit.STRAWBERRY) {
+        return require('../../resource/BREAD2.png');
+    }
+    return require('../../resource/' + fruit + '.png');
+};
 let engine = Engine.create();
 let render = null;
 let requestAnimation = null;

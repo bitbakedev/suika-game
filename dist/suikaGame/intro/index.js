@@ -25,8 +25,17 @@ const Intro = ({ isVisible, handleGameStart }) => {
     };
     const fruitItemEls = Object.keys(Fruit).slice(0, Object.keys(Fruit).length - 1).map((fruit, index) => {
         const itemPositions = positionCircularly(11, index);
+        const getImageUrl = (fruitName) => {
+            if (fruitName === 'BLUEBERRY') {
+                return require('../../../resource/BREAD1.png');
+            }
+            if (fruitName === 'STRAWBERRY') {
+                return require('../../../resource/BREAD2.png');
+            }
+            return require('../../../resource/' + fruitName + '.png');
+        };
         return (_jsx("li", { className: cx('listItem'), style: {
-                backgroundImage: `url(${require('../../../resource/' + fruit + '.png')})`,
+                backgroundImage: `url(${getImageUrl(fruit)})`,
                 top: itemPositions.top,
                 left: itemPositions.left
             } }, fruit));
