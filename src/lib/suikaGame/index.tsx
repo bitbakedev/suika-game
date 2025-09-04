@@ -19,6 +19,13 @@ const SuikaGame = () => {
   const [isShakeActive, setIsShakeActive] = useState<boolean>(false);
   const [isCanvasShaking, setIsCanvasShaking] = useState<boolean>(false);
 
+  const getImageUrl = (fruit: Fruit) => {
+    if (fruit === Fruit.BLUEBERRY) {
+      return require('../../resource/BREAD1.png');
+    }
+    return require('../../resource/' + fruit + '.png');
+  };
+
   const { clear, removeSmallFruits, shakeCanvas } = useMatterJS({ 
     score, 
     setScore, 
@@ -129,7 +136,7 @@ const SuikaGame = () => {
         </div>
         
         <div className={cx('rightSection')}>
-          <div className={cx('nextFruit')} style={{ backgroundImage: `url(${require('../../resource/' + nextItem + '.png')})` }} />
+          <div className={cx('nextFruit')} style={{ backgroundImage: `url(${getImageUrl(nextItem)})` }} />
           <div className={cx('nextText')}>NEXT</div>
         </div>
       </div>

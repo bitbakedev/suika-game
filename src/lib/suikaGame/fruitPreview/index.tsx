@@ -11,6 +11,13 @@ interface FruitPreviewProps {
 const FruitPreview = ({ onRestart }: FruitPreviewProps) => {
   const fruits = Object.values(Fruit);
 
+  const getImageUrl = (fruit: Fruit) => {
+    if (fruit === Fruit.BLUEBERRY) {
+      return require('../../../resource/BREAD1.png');
+    }
+    return require('../../../resource/' + fruit + '.png');
+  };
+
   return (
     <div className={cx('previewArea')}>
       <div className={cx('previewWrap')}>
@@ -23,7 +30,7 @@ const FruitPreview = ({ onRestart }: FruitPreviewProps) => {
               key={fruit} 
               className={cx('fruitItem')}
               style={{ 
-                backgroundImage: `url(${require('../../../resource/' + fruit + '.png')})`
+                backgroundImage: `url(${getImageUrl(fruit)})`
               }}
             />
           ))}

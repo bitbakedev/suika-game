@@ -25,11 +25,18 @@ const Intro = ({isVisible, handleGameStart}: IntroProps) => {
 
   const fruitItemEls = Object.keys(Fruit).slice(0, Object.keys(Fruit).length - 1).map((fruit, index) => {
     const itemPositions = positionCircularly(11, index);
+    
+    const getImageUrl = (fruitName: string) => {
+      if (fruitName === 'BLUEBERRY') {
+        return require('../../../resource/BREAD1.png');
+      }
+      return require('../../../resource/' + fruitName + '.png');
+    };
 
     return (
       <li key={fruit} className={cx('listItem')}
           style={{
-            backgroundImage: `url(${require('../../../resource/' + fruit + '.png')})`,
+            backgroundImage: `url(${getImageUrl(fruit)})`,
             top: itemPositions.top,
             left: itemPositions.left
           }}/>

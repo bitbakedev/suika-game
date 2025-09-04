@@ -14,7 +14,14 @@ interface HeaderProps {
 const Header = ({ score, bestScore, nextItem }: HeaderProps) => {
   const getBestScore = () => {
     return score > bestScore ? score : bestScore;
-  }
+  };
+
+  const getImageUrl = (fruit: Fruit) => {
+    if (fruit === Fruit.BLUEBERRY) {
+      return require('../../../resource/BREAD1.png');
+    }
+    return require('../../../resource/' + fruit + '.png');
+  };
 
   return (
     <div className={cx('headerArea')} style={{ maxWidth: getRenderWidth() + 4 }}>
@@ -28,7 +35,7 @@ const Header = ({ score, bestScore, nextItem }: HeaderProps) => {
       <div className={cx('nextArea')}>
         <span className={cx('text')}>NEXT</span>
         <div className={cx('next')}>
-          <span className={cx('img')} style={{ backgroundImage: `url(${require('../../../resource/' + nextItem + '.png')})` }} />
+          <span className={cx('img')} style={{ backgroundImage: `url(${getImageUrl(nextItem!)})` }} />
         </div>
       </div>
     </div>

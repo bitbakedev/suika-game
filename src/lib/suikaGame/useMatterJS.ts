@@ -9,7 +9,12 @@ import useConfetti from "./useConfetti";
 
 const { Engine, Render, World, Mouse, MouseConstraint } = Matter;
 const frameInterval = 1000 / 60; // 60fps
-const getImgUrl = (fruit: Fruit) => require('../../resource/' + fruit + '.png');
+const getImgUrl = (fruit: Fruit) => {
+  if (fruit === Fruit.BLUEBERRY) {
+    return require('../../resource/BREAD1.png');
+  }
+  return require('../../resource/' + fruit + '.png');
+};
 
 let engine = Engine.create();
 let render: Matter.Render | null = null;
