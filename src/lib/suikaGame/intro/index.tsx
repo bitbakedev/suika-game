@@ -48,6 +48,9 @@ const Intro = ({isVisible, handleGameStart}: IntroProps) => {
       if (fruitName === 'APPLE') {
         return require('../../../resource/BREAD7.png');
       }
+      if (fruitName === 'PEACH') {
+        return require('../../../resource/BREAD8.png');
+      }
       return require('../../../resource/' + fruitName + '.png');
     };
 
