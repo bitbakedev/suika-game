@@ -36,7 +36,7 @@ export const getFruitFeature = (fruit) => {
         case Fruit.MELON:
             return { radius: getRenderWidth() / 3.95, mass: 1, label: Fruit.MELON, score: 1024 };
         case Fruit.WATERMELON:
-            return { radius: getRenderWidth() / 3.95, mass: 1, label: Fruit.WATERMELON, score: 100 };
+            return { radius: getRenderWidth() / 3.5, mass: 1, label: Fruit.WATERMELON, score: 100 };
     }
 };
 export const getRandomFruitFeature = () => {
