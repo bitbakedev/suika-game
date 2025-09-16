@@ -7,6 +7,7 @@ import GameOverModal from './gameOverModal';
 import FruitPreview from './fruitPreview';
 import ItemUsageModal from './itemUsageModal';
 import ItemExhaustedModal from './itemExhaustedModal';
+import RestartConfirmModal from './restartConfirmModal';
 
 const cx = classNames.bind(styles);
 
@@ -24,6 +25,7 @@ const SuikaGame = () => {
   const [modalItemType, setModalItemType] = useState<'remove' | 'shake'>('remove');
   const [showExhaustedModal, setShowExhaustedModal] = useState<boolean>(false);
   const [exhaustedItemType, setExhaustedItemType] = useState<'remove' | 'shake'>('remove');
+  const [showRestartModal, setShowRestartModal] = useState<boolean>(false);
 
   const getImageUrl = (fruit: Fruit) => {
     if (fruit === Fruit.BLUEBERRY) {
@@ -95,6 +97,14 @@ const SuikaGame = () => {
     setIsShakeActive(false);
     setIsCanvasShaking(false);
     clear();
+  }
+
+  const handleRestartClick = () => {
+    setShowRestartModal(true);
+  }
+
+  const handleRestartConfirm = () => {
+    handleTryAgain();
   }
 
   const handleClose = () => {
@@ -202,7 +212,7 @@ const SuikaGame = () => {
         </div>
       </div>
 
-      <FruitPreview onRestart={handleTryAgain} />
+      <FruitPreview onRestart={handleRestartClick} />
       
       <GameOverModal isVisible={isGameOver} onClick={handleTryAgain} score={score} />
       
@@ -218,6 +228,12 @@ const SuikaGame = () => {
         isVisible={showExhaustedModal}
         onClose={() => setShowExhaustedModal(false)}
         itemType={exhaustedItemType}
+      />
+      
+      <RestartConfirmModal 
+        isVisible={showRestartModal}
+        onClose={() => setShowRestartModal(false)}
+        onConfirm={handleRestartConfirm}
       />
     </div>
   )
