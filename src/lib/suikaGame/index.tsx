@@ -50,6 +50,9 @@ const SuikaGame = () => {
     if (fruit === Fruit.MELON) {
       return require('../../resource/BREAD10.png');
     }
+    if (fruit === Fruit.WATERMELON) {
+      return require('../../resource/BREAD11.png');
+    }
     return require('../../resource/' + fruit + '.png');
   };
 
