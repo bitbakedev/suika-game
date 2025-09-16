@@ -252,9 +252,8 @@
 
 .closeButton {
   position: absolute;
-  bottom: -28px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 12px;
+  right: 12px;
   width: 56px;
   height: 56px;
   background: linear-gradient(145deg, #FF6B6B, #FF5252);
