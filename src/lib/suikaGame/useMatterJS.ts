@@ -55,6 +55,7 @@ let fixedItem: Matter.Body | null = null; // 고정된 아이템
 let prevPosition = { x: getRenderWidth() / 2, y: 50 };
 let nextFruit: Fruit | null = null;
 let prevMergingFruitIds: number[] = [];
+let isShakeItemActive: boolean = false;
 
 const renderOptions = {
   width: getRenderWidth(),
@@ -237,7 +238,7 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
       const bodyA = pair.bodyA;
       const bodyB = pair.bodyB;
       
-      if (bodyA.label === GameOverLine.label || bodyB.label === GameOverLine.label) {
+      if ((bodyA.label === GameOverLine.label || bodyB.label === GameOverLine.label) && !isShakeItemActive) {
         handleGameOver(propsRef);
         return;
       }
@@ -358,6 +359,7 @@ const useMatterJS = (props: UseMatterJSProps) => {
 
   const clear = () => {
     fixedItem = null;
+    isShakeItemActive = false;
     engine = Engine.create();
     init(propsRef);
     event(propsRef, { fireConfetti, fireRapidStarConfetti });
@@ -386,6 +388,8 @@ const useMatterJS = (props: UseMatterJSProps) => {
   }
 
   const shakeCanvas = () => {
+    isShakeItemActive = true;
+    
     const allBodies = engine.world.bodies.filter(body => 
       !body.isStatic && !body.isSensor && body.label !== 'GUIDE_LINE'
     );
@@ -424,6 +428,11 @@ const useMatterJS = (props: UseMatterJSProps) => {
         });
       }, i * 120); // 간격
     }
+    
+    // 흔들기 효과가 끝난 후 게임오버 체크 재활성화
+    setTimeout(() => {
+      isShakeItemActive = false;
+    }, 1200); // 전체 흔들기 효과 시간보다 약간 길게
   }
 
   return {
