@@ -49,8 +49,8 @@ const ItemUsageModal = ({ isVisible, onClose, onUse, itemType, remainingCount }:
 
   const getItemDescription = () => {
     return itemType === 'remove' 
-      ? '광고를 보고 아이템을 사용할까요?' 
-      : '광고를 보고 흔들기를 사용할까요?';
+      ? '광고를 보고 작은 빵들을 제거할까요?' 
+      : '광고를 보고 화면을 흔들까요?';
   };
 
   return (
