@@ -6,6 +6,7 @@ import { Fruit, getRandomFruitFeature } from './object/Fruit';
 import GameOverModal from './gameOverModal';
 import FruitPreview from './fruitPreview';
 import ItemUsageModal from './itemUsageModal';
+import ItemExhaustedModal from './itemExhaustedModal';
 
 const cx = classNames.bind(styles);
 
@@ -21,6 +22,8 @@ const SuikaGame = () => {
   const [isCanvasShaking, setIsCanvasShaking] = useState<boolean>(false);
   const [showItemModal, setShowItemModal] = useState<boolean>(false);
   const [modalItemType, setModalItemType] = useState<'remove' | 'shake'>('remove');
+  const [showExhaustedModal, setShowExhaustedModal] = useState<boolean>(false);
+  const [exhaustedItemType, setExhaustedItemType] = useState<'remove' | 'shake'>('remove');
 
   const getImageUrl = (fruit: Fruit) => {
     if (fruit === Fruit.BLUEBERRY) {
@@ -102,6 +105,9 @@ const SuikaGame = () => {
     if (itemCount > 0 && !isGameOver) {
       setModalItemType('remove');
       setShowItemModal(true);
+    } else if (itemCount === 0 && !isGameOver) {
+      setExhaustedItemType('remove');
+      setShowExhaustedModal(true);
     }
   }
 
@@ -109,6 +115,9 @@ const SuikaGame = () => {
     if (shakeItemCount > 0 && !isGameOver) {
       setModalItemType('shake');
       setShowItemModal(true);
+    } else if (shakeItemCount === 0 && !isGameOver) {
+      setExhaustedItemType('shake');
+      setShowExhaustedModal(true);
     }
   }
 
@@ -208,6 +217,12 @@ const SuikaGame = () => {
         onUse={handleModalItemUse}
         itemType={modalItemType}
         remainingCount={modalItemType === 'remove' ? itemCount : shakeItemCount}
+      />
+      
+      <ItemExhaustedModal 
+        isVisible={showExhaustedModal}
+        onClose={() => setShowExhaustedModal(false)}
+        itemType={exhaustedItemType}
       />
     </div>
   )
