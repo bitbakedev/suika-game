@@ -38,6 +38,9 @@ const SuikaGame = () => {
     if (fruit === Fruit.KOREANMELON) {
       return require('../../resource/BREAD6.png');
     }
+    if (fruit === Fruit.APPLE) {
+      return require('../../resource/BREAD7.png');
+    }
     return require('../../resource/' + fruit + '.png');
   };
 
