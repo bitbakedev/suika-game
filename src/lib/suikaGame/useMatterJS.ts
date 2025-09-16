@@ -25,6 +25,9 @@ const getImgUrl = (fruit: Fruit) => {
   if (fruit === Fruit.AVOCADO) {
     return require('../../resource/BREAD5.png');
   }
+  if (fruit === Fruit.KOREANMELON) {
+    return require('../../resource/BREAD6.png');
+  }
   return require('../../resource/' + fruit + '.png');
 };
 
