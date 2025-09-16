@@ -26,6 +26,9 @@ const Header = ({ score, bestScore, nextItem }: HeaderProps) => {
     if (fruit === Fruit.TANGERINE) {
       return require('../../../resource/BREAD3.png');
     }
+    if (fruit === Fruit.TOMATO) {
+      return require('../../../resource/BREAD4.png');
+    }
     return require('../../../resource/' + fruit + '.png');
   };
 
