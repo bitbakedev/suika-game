@@ -56,22 +56,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 1px;
   background: rgba(255, 255, 255, 0.9);
   border: 2px solid rgba(255, 255, 255, 0.8);
   border-radius: 12px;
-  padding: 6px 12px;
+  padding: 4px 8px;
   height: 36px;
-  width: 450px;
+  width: 400px;
   flex: 1;
-  max-width: 680px;
+  max-width: 600px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .fruitItem {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

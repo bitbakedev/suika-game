@@ -1,5 +1,5 @@
 export const getRenderHeight = () => {
-    const maxHeight = window.innerHeight - 160; // 상단 80px + 하단 80px
+    const maxHeight = window.innerHeight - 180; // 상단 80px + 하단 100px
     const screenHeight = window.innerHeight;
     const screenWidth = window.innerWidth - 40; // 좌우 여백 20px씩
     const maxWidth = screenHeight * 4 / 7 - 8;
@@ -12,5 +12,5 @@ export const getRenderHeight = () => {
   };
   
   export const getRenderWidth = () => {
-    return Math.min(window.innerWidth - 40, getRenderHeight() * 0.57); // 비율 조정
+    return Math.min(window.innerWidth - 40, getRenderHeight() * 0.52); // 비율을 더 좁게 조정
   };
