@@ -20,12 +20,7 @@ const ItemExhaustedModal = ({ isVisible, onClose, itemType }: ItemExhaustedModal
     if (itemType === 'remove') {
       return (
         <div className={cx('itemIconContainer')}>
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-            <circle cx="7" cy="7" r="4" fill="#4F46E5"/>
-            <circle cx="17" cy="7" r="4" fill="#EF4444"/>
-            <path d="M4 16l16 0" stroke="#D2691E" strokeWidth="4" strokeLinecap="round"/>
-            <path d="M6 18l12 0" stroke="#D2691E" strokeWidth="2" strokeLinecap="round"/>
-          </svg>
+          <img src={require('../../../resource/itempopping.png')} alt="제거 아이템" width="40" height="40" />
         </div>
       );
     } else {
