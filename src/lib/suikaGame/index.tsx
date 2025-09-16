@@ -5,6 +5,7 @@ import useMatterJS from "./useMatterJS";
 import { Fruit, getRandomFruitFeature } from './object/Fruit';
 import GameOverModal from './gameOverModal';
 import FruitPreview from './fruitPreview';
+import ItemUsageModal from './itemUsageModal';
 
 const cx = classNames.bind(styles);
 
@@ -18,6 +19,8 @@ const SuikaGame = () => {
   const [isItemActive, setIsItemActive] = useState<boolean>(false);
   const [isShakeActive, setIsShakeActive] = useState<boolean>(false);
   const [isCanvasShaking, setIsCanvasShaking] = useState<boolean>(false);
+  const [showItemModal, setShowItemModal] = useState<boolean>(false);
+  const [modalItemType, setModalItemType] = useState<'remove' | 'shake'>('remove');
 
   const getImageUrl = (fruit: Fruit) => {
     if (fruit === Fruit.BLUEBERRY) {
@@ -97,6 +100,20 @@ const SuikaGame = () => {
 
   const handleItemUse = () => {
     if (itemCount > 0 && !isGameOver) {
+      setModalItemType('remove');
+      setShowItemModal(true);
+    }
+  }
+
+  const handleShakeUse = () => {
+    if (shakeItemCount > 0 && !isGameOver) {
+      setModalItemType('shake');
+      setShowItemModal(true);
+    }
+  }
+
+  const handleModalItemUse = () => {
+    if (modalItemType === 'remove') {
       setItemCount(prev => prev - 1);
       setIsItemActive(true);
       removeSmallFruits();
@@ -105,11 +122,7 @@ const SuikaGame = () => {
       setTimeout(() => {
         setIsItemActive(false);
       }, 600);
-    }
-  }
-
-  const handleShakeUse = () => {
-    if (shakeItemCount > 0 && !isGameOver) {
+    } else {
       setShakeItemCount(prev => prev - 1);
       setIsShakeActive(true);
       setIsCanvasShaking(true);
@@ -188,6 +201,14 @@ const SuikaGame = () => {
       <FruitPreview onRestart={handleTryAgain} />
       
       <GameOverModal isVisible={isGameOver} onClick={handleTryAgain} score={score} />
+      
+      <ItemUsageModal 
+        isVisible={showItemModal}
+        onClose={() => setShowItemModal(false)}
+        onUse={handleModalItemUse}
+        itemType={modalItemType}
+        remainingCount={modalItemType === 'remove' ? itemCount : shakeItemCount}
+      />
     </div>
   )
 }
