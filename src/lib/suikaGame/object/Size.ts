@@ -12,5 +12,5 @@ export const getRenderHeight = () => {
   };
   
   export const getRenderWidth = () => {
-    return 500; // 고정 넓이 500px
+    return Math.min(window.innerWidth - 40, 500); // 최대 500px, 최소 화면 너비 - 40px
   };
