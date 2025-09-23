@@ -12,5 +12,5 @@ export const getRenderHeight = () => {
   };
   
   export const getRenderWidth = () => {
-    return Math.min(window.innerWidth - 40, getRenderHeight() * 0.52); // 비율을 더 좁게 조정
+    return 500; // 고정 넓이 500px
   };

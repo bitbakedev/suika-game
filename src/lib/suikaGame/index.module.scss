@@ -238,9 +238,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 500px;
   height: 100%;
-  max-width: calc(100vw - 40px);
   margin: 0 auto;
 
   .canvasWrap {
@@ -248,8 +247,7 @@
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    width: 100%;
-    max-width: calc(100vw - 40px);
+    width: 500px;
     background: rgba(255, 255, 255, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.3);
     transition: transform 0.1s ease-out;
