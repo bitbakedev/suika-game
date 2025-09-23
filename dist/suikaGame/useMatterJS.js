@@ -15,6 +15,33 @@ const getImgUrl = (fruit) => {
     if (fruit === Fruit.STRAWBERRY) {
         return require('../../resource/BREAD2.png');
     }
+    if (fruit === Fruit.TANGERINE) {
+        return require('../../resource/BREAD3.png');
+    }
+    if (fruit === Fruit.TOMATO) {
+        return require('../../resource/BREAD4.png');
+    }
+    if (fruit === Fruit.AVOCADO) {
+        return require('../../resource/BREAD5.png');
+    }
+    if (fruit === Fruit.KOREANMELON) {
+        return require('../../resource/BREAD6.png');
+    }
+    if (fruit === Fruit.APPLE) {
+        return require('../../resource/BREAD7.png');
+    }
+    if (fruit === Fruit.PEACH) {
+        return require('../../resource/BREAD8.png');
+    }
+    if (fruit === Fruit.COCONUT) {
+        return require('../../resource/BREAD9.png');
+    }
+    if (fruit === Fruit.MELON) {
+        return require('../../resource/BREAD10.png');
+    }
+    if (fruit === Fruit.WATERMELON) {
+        return require('../../resource/BREAD11.png');
+    }
     return require('../../resource/' + fruit + '.png');
 };
 let engine = Engine.create();
@@ -26,6 +53,7 @@ let fixedItem = null; // 고정된 아이템
 let prevPosition = { x: getRenderWidth() / 2, y: 50 };
 let nextFruit = null;
 let prevMergingFruitIds = [];
+let isShakeItemActive = false;
 const renderOptions = {
     width: getRenderWidth(),
     height: getRenderHeight(),
@@ -187,7 +215,7 @@ const event = (propsRef, effects) => {
         pairs.forEach((pair) => {
             const bodyA = pair.bodyA;
             const bodyB = pair.bodyB;
-            if (bodyA.label === GameOverLine.label || bodyB.label === GameOverLine.label) {
+            if ((bodyA.label === GameOverLine.label || bodyB.label === GameOverLine.label) && !isShakeItemActive) {
                 handleGameOver(propsRef);
                 return;
             }
@@ -282,6 +310,7 @@ const useMatterJS = (props) => {
     }, [fireConfetti, fireRapidStarConfetti]);
     const clear = () => {
         fixedItem = null;
+        isShakeItemActive = false;
         engine = Engine.create();
         init(propsRef);
         event(propsRef, { fireConfetti, fireRapidStarConfetti });
@@ -305,6 +334,7 @@ const useMatterJS = (props) => {
         World.remove(engine.world, bodiesToRemove);
     };
     const shakeCanvas = () => {
+        isShakeItemActive = true;
         const allBodies = engine.world.bodies.filter(body => !body.isStatic && !body.isSensor && body.label !== 'GUIDE_LINE');
         // 사운드 효과
         const popSound = new Audio(require('../../resource/pop.mp3'));
@@ -335,6 +365,10 @@ const useMatterJS = (props) => {
                 });
             }, i * 120); // 간격
         }
+        // 흔들기 효과가 끝난 후 게임오버 체크 재활성화
+        setTimeout(() => {
+            isShakeItemActive = false;
+        }, 1200); // 전체 흔들기 효과 시간보다 약간 길게
     };
     return {
         clear,

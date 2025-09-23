@@ -32,6 +32,33 @@ const Intro = ({ isVisible, handleGameStart }) => {
             if (fruitName === 'STRAWBERRY') {
                 return require('../../../resource/BREAD2.png');
             }
+            if (fruitName === 'TANGERINE') {
+                return require('../../../resource/BREAD3.png');
+            }
+            if (fruitName === 'TOMATO') {
+                return require('../../../resource/BREAD4.png');
+            }
+            if (fruitName === 'AVOCADO') {
+                return require('../../../resource/BREAD5.png');
+            }
+            if (fruitName === 'KOREANMELON') {
+                return require('../../../resource/BREAD6.png');
+            }
+            if (fruitName === 'APPLE') {
+                return require('../../../resource/BREAD7.png');
+            }
+            if (fruitName === 'PEACH') {
+                return require('../../../resource/BREAD8.png');
+            }
+            if (fruitName === 'COCONUT') {
+                return require('../../../resource/BREAD9.png');
+            }
+            if (fruitName === 'MELON') {
+                return require('../../../resource/BREAD10.png');
+            }
+            if (fruitName === 'WATERMELON') {
+                return require('../../../resource/BREAD11.png');
+            }
             return require('../../../resource/' + fruitName + '.png');
         };
         return (_jsx("li", { className: cx('listItem'), style: {
