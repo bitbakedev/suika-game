@@ -205,8 +205,8 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
       render: {
         sprite: {
           texture: getImgUrl(label),
-          xScale: (radius * 2.2) / 250,
-          yScale: (radius * 2.2) / 250,
+          xScale: (radius * 1) / 250,
+          yScale: (radius * 1) / 250,
         }
       },
     });
