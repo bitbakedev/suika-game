@@ -336,70 +336,64 @@ const createMergeEffect = (x: number, y: number) => {
   const canvasWrap = document.getElementById('canvasWrap');
   if (!canvasWrap) return;
 
-  // 캔버스 요소 찾기 (실제 canvas 태그)
-  const canvas = canvasWrap.querySelector('canvas');
-  if (!canvas) return;
-
-  // 캔버스의 실제 위치와 크기 계산
-  const canvasRect = canvas.getBoundingClientRect();
-  const canvasWrapRect = canvasWrap.getBoundingClientRect();
-  
-  // 게임 좌표를 실제 캔버스 좌표로 변환
+  // 물리 엔진 좌표를 캔버스 비율로 직접 변환
+  const canvasRect = canvasWrap.getBoundingClientRect();
   const scaleX = canvasRect.width / getRenderWidth();
   const scaleY = canvasRect.height / getRenderHeight();
   
-  // 캔버스 내부의 상대적 위치 계산
-  const relativeX = x * scaleX;
-  const relativeY = y * scaleY;
-  
-  // canvasWrap 기준으로 절대 위치 계산
-  const screenX = relativeX + (canvasRect.left - canvasWrapRect.left);
-  const screenY = relativeY + (canvasRect.top - canvasWrapRect.top);
+  const screenX = x * scaleX;
+  const screenY = y * scaleY;
 
-  // 애니메이션 요소 생성
-  const effect = document.createElement('div');
-  effect.className = 'merge-effect';
-  effect.style.cssText = `
+  // 중심 폭발 효과
+  const explosion = document.createElement('div');
+  explosion.style.cssText = `
     position: absolute;
     left: ${screenX}px;
     top: ${screenY}px;
-    width: 60px;
-    height: 60px;
-    margin-left: -30px;
-    margin-top: -30px;
+    width: 80px;
+    height: 80px;
+    margin-left: -40px;
+    margin-top: -40px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,215,0,0.8) 0%, rgba(255,165,0,0.6) 50%, transparent 100%);
+    background: radial-gradient(circle, 
+      rgba(255,255,255,1) 0%, 
+      rgba(255,215,0,0.9) 20%, 
+      rgba(255,165,0,0.7) 40%, 
+      rgba(255,69,0,0.5) 70%, 
+      transparent 100%);
     pointer-events: none;
     z-index: 1000;
-    animation: mergeExplosion 0.6s ease-out forwards;
+    animation: explosionBurst 0.5s ease-out forwards;
+    box-shadow: 0 0 30px rgba(255,215,0,0.8);
   `;
+  canvasWrap.appendChild(explosion);
 
-  canvasWrap.appendChild(effect);
-
-  // 파티클 효과 추가
-  for (let i = 0; i < 8; i++) {
+  // 파티클 효과 - 더 많은 파티클로 폭발 효과
+  for (let i = 0; i < 12; i++) {
     const particle = document.createElement('div');
-    const angle = (i / 8) * Math.PI * 2;
-    const distance = 40 + Math.random() * 20;
+    const angle = (i / 12) * Math.PI * 2;
+    const distance = 60 + Math.random() * 40;
     const endX = Math.cos(angle) * distance;
     const endY = Math.sin(angle) * distance;
+    const size = 6 + Math.random() * 8;
+    const colors = ['#FFD700', '#FFA500', '#FF6347', '#FF1493', '#00FF00', '#00BFFF'];
     
-    particle.className = 'merge-particle';
     particle.style.cssText = `
       position: absolute;
       left: ${screenX}px;
       top: ${screenY}px;
-      width: 8px;
-      height: 8px;
-      margin-left: -4px;
-      margin-top: -4px;
+      width: ${size}px;
+      height: ${size}px;
+      margin-left: -${size/2}px;
+      margin-top: -${size/2}px;
       border-radius: 50%;
-      background: ${['#FFD700', '#FFA500', '#FF6347', '#FF69B4'][Math.floor(Math.random() * 4)]};
+      background: ${colors[Math.floor(Math.random() * colors.length)]};
       pointer-events: none;
       z-index: 999;
-      animation: mergeParticle 0.8s ease-out forwards;
+      animation: particleExplode 0.8s ease-out forwards;
       --end-x: ${endX}px;
       --end-y: ${endY}px;
+      box-shadow: 0 0 10px currentColor;
     `;
     
     canvasWrap.appendChild(particle);
@@ -412,12 +406,12 @@ const createMergeEffect = (x: number, y: number) => {
     }, 800);
   }
 
-  // 메인 효과 제거
+  // 폭발 효과 제거
   setTimeout(() => {
-    if (effect.parentNode) {
-      effect.parentNode.removeChild(effect);
+    if (explosion.parentNode) {
+      explosion.parentNode.removeChild(explosion);
     }
-  }, 600);
+  }, 500);
 };
 
 interface UseMatterJSProps {
