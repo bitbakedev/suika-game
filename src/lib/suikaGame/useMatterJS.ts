@@ -133,9 +133,8 @@ const handleGameOver = (propsRef: React.RefObject<UseMatterJSProps>) => {
   
   console.log('Game Over triggered!'); // 디버깅용
   
-  // 상태 업데이트를 즉시 실행
-  const setGameOver = propsRef.current.setIsGameOver;
-  setGameOver(true);
+  // 상태 업데이트를 즉시 실행하고 한 번만 실행되도록 보장
+  propsRef.current.setIsGameOver(true);
   
   console.log('setIsGameOver called with true'); // 디버깅용
   
@@ -148,6 +147,7 @@ const handleGameOver = (propsRef: React.RefObject<UseMatterJSProps>) => {
   // 엔진 정지
   if (render) {
     Render.stop(render);
+    Engine.clear(engine);
   }
 }
 

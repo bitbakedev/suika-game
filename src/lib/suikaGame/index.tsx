@@ -114,6 +114,7 @@ const SuikaGame = () => {
   const handleContinueWithAd = () => {
     // 게임오버 라인 위의 과일들 제거
     removeGameOverLineFruits();
+    // 부활 후 게임오버 상태를 해제
     setIsGameOver(false);
   }
 
