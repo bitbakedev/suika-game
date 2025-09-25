@@ -424,6 +424,11 @@ const useMatterJS = (props: UseMatterJSProps) => {
       !body.isStatic && !body.isSensor && body.label !== 'GUIDE_LINE'
     );
     
+    if (allBodies.length === 0) {
+      isShakeItemActive = false;
+      return;
+    }
+    
     // 사운드 효과
     const popSound = new Audio(require('../../resource/pop.mp3'));
     popSound.volume = 0.5;
