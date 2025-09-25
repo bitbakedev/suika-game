@@ -59,6 +59,7 @@ let isShakeItemActive: boolean = false;
 let isDangerZone: boolean = false;
 let lastDroppedItemId: number | null = null;
 let itemSettleTimeout: NodeJS.Timeout | null = null;
+let itemSettleTimeout: NodeJS.Timeout | null = null;
 
 const renderOptions = {
   width: getRenderWidth(),
@@ -77,6 +78,9 @@ const updateGameOverGuideLineColor = () => {
 };
 
 const checkDangerZone = () => {
+  // 떨어뜨린 직후에는 체크하지 않음
+  if (!itemSettleTimeout) return;
+  
   // 아이템이 정착한 후에만 위험 상태 체크 (속도가 거의 0에 가까울 때)
   if (lastDroppedItemId) {
     const droppedItem = engine.world.bodies.find(body => body.id === lastDroppedItemId);
@@ -274,9 +278,19 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
     // 떨어뜨린 아이템 ID 저장
     lastDroppedItemId = newItem.id;
     
-    // 위험 상태 초기화 (새 아이템이므로)
+    // 위험 상태 초기화 및 정착 대기 시간 설정
     isDangerZone = false;
     updateGameOverGuideLineColor();
+    
+    // 기존 정착 타이머 클리어
+    if (itemSettleTimeout) {
+      clearTimeout(itemSettleTimeout);
+    }
+    
+    // 2초 후부터 위험 상태 체크 시작
+    itemSettleTimeout = setTimeout(() => {
+      itemSettleTimeout = null; // 체크 활성화
+    }, 2000);
 
     fixedItemTimeOut = setTimeout(() => {
       // 모든 대시 라인들을 다시 보이게 만들기
@@ -442,6 +456,12 @@ const useMatterJS = (props: UseMatterJSProps) => {
     isShakeItemActive = false;
     isDangerZone = false;
     lastDroppedItemId = null;
+    
+    // 타이머 정리
+    if (itemSettleTimeout) {
+      clearTimeout(itemSettleTimeout);
+      itemSettleTimeout = null;
+    }
     
     // 타이머 정리
     if (itemSettleTimeout) {
