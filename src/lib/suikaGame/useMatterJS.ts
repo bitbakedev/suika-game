@@ -115,8 +115,8 @@ const createFixedItem = (propsRef: React.RefObject<UseMatterJSProps>) => {
     render: {
       sprite: {
         texture: getImgUrl(label),
-        xScale: (radius * 2.2) / 250,
-        yScale: (radius * 2.2) / 250,
+        xScale: (radius * 2) / 250,
+        yScale: (radius * 2) / 250,
       }
     }
   });
@@ -259,12 +259,8 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
       if (labelA === labelB) {
         prevMergingFruitIds = [bodyA.id, bodyB.id];
         
-        // 합쳐지는 위치에 애니메이션 효과 추가
-        createMergeEffect(midX, midY);
-        
         // 과일이 합쳐질 때 사운드 효과
         const popSound = new Audio(require('../../resource/pop2.mp3'));
-        popSound.volume = 0.7; // 볼륨 증가
         popSound.play();
 
         World.remove(engine.world, bodyA);
@@ -329,89 +325,6 @@ const run = () => {
   if (!render) return;
   animate(0); // 시작할 때 시간을 0으로 초기화
   Render.run(render);
-};
-
-// 합쳐지는 위치에 애니메이션 효과 생성
-const createMergeEffect = (x: number, y: number) => {
-  const canvasWrap = document.getElementById('canvasWrap');
-  if (!canvasWrap) return;
-
-  // 물리 엔진 좌표를 캔버스 비율로 직접 변환
-  const canvasRect = canvasWrap.getBoundingClientRect();
-  const scaleX = canvasRect.width / getRenderWidth();
-  const scaleY = canvasRect.height / getRenderHeight();
-  
-  const screenX = x * scaleX;
-  const screenY = y * scaleY;
-
-  // 중심 폭발 효과
-  const explosion = document.createElement('div');
-  explosion.style.cssText = `
-    position: absolute;
-    left: ${screenX}px;
-    top: ${screenY}px;
-    width: 80px;
-    height: 80px;
-    margin-left: -40px;
-    margin-top: -40px;
-    border-radius: 50%;
-    background: radial-gradient(circle, 
-      rgba(255,255,255,1) 0%, 
-      rgba(255,215,0,0.9) 20%, 
-      rgba(255,165,0,0.7) 40%, 
-      rgba(255,69,0,0.5) 70%, 
-      transparent 100%);
-    pointer-events: none;
-    z-index: 1000;
-    animation: explosionBurst 0.5s ease-out forwards;
-    box-shadow: 0 0 30px rgba(255,215,0,0.8);
-  `;
-  canvasWrap.appendChild(explosion);
-
-  // 파티클 효과 - 더 많은 파티클로 폭발 효과
-  for (let i = 0; i < 12; i++) {
-    const particle = document.createElement('div');
-    const angle = (i / 12) * Math.PI * 2;
-    const distance = 60 + Math.random() * 40;
-    const endX = Math.cos(angle) * distance;
-    const endY = Math.sin(angle) * distance;
-    const size = 6 + Math.random() * 8;
-    const colors = ['#FFD700', '#FFA500', '#FF6347', '#FF1493', '#00FF00', '#00BFFF'];
-    
-    particle.style.cssText = `
-      position: absolute;
-      left: ${screenX}px;
-      top: ${screenY}px;
-      width: ${size}px;
-      height: ${size}px;
-      margin-left: -${size/2}px;
-      margin-top: -${size/2}px;
-      border-radius: 50%;
-      background: ${colors[Math.floor(Math.random() * colors.length)]};
-      pointer-events: none;
-      z-index: 999;
-      animation: particleExplode 0.8s ease-out forwards;
-      --end-x: ${endX}px;
-      --end-y: ${endY}px;
-      box-shadow: 0 0 10px currentColor;
-    `;
-    
-    canvasWrap.appendChild(particle);
-    
-    // 파티클 제거
-    setTimeout(() => {
-      if (particle.parentNode) {
-        particle.parentNode.removeChild(particle);
-      }
-    }, 800);
-  }
-
-  // 폭발 효과 제거
-  setTimeout(() => {
-    if (explosion.parentNode) {
-      explosion.parentNode.removeChild(explosion);
-    }
-  }, 500);
 };
 
 interface UseMatterJSProps {
