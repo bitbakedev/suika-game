@@ -336,14 +336,25 @@ const createMergeEffect = (x: number, y: number) => {
   const canvasWrap = document.getElementById('canvasWrap');
   if (!canvasWrap) return;
 
+  // 캔버스 요소 찾기 (실제 canvas 태그)
+  const canvas = canvasWrap.querySelector('canvas');
+  if (!canvas) return;
+
   // 캔버스의 실제 위치와 크기 계산
-  const canvasRect = canvasWrap.getBoundingClientRect();
+  const canvasRect = canvas.getBoundingClientRect();
+  const canvasWrapRect = canvasWrap.getBoundingClientRect();
+  
+  // 게임 좌표를 실제 캔버스 좌표로 변환
   const scaleX = canvasRect.width / getRenderWidth();
   const scaleY = canvasRect.height / getRenderHeight();
   
-  // 게임 좌표를 화면 좌표로 변환
-  const screenX = x * scaleX;
-  const screenY = y * scaleY;
+  // 캔버스 내부의 상대적 위치 계산
+  const relativeX = x * scaleX;
+  const relativeY = y * scaleY;
+  
+  // canvasWrap 기준으로 절대 위치 계산
+  const screenX = relativeX + (canvasRect.left - canvasWrapRect.left);
+  const screenY = relativeY + (canvasRect.top - canvasWrapRect.top);
 
   // 애니메이션 요소 생성
   const effect = document.createElement('div');
