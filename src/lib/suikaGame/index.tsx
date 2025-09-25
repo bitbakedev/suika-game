@@ -27,6 +27,7 @@ const SuikaGame = () => {
   const [exhaustedItemType, setExhaustedItemType] = useState<'remove' | 'shake'>('remove');
   const [showRestartModal, setShowRestartModal] = useState<boolean>(false);
   const [lastMergedFruit, setLastMergedFruit] = useState<Fruit | null>(null);
+  const [hasUsedRevive, setHasUsedRevive] = useState<boolean>(false);
 
   const getImageUrl = (fruit: Fruit) => {
     if (fruit === Fruit.BLUEBERRY) {
@@ -100,6 +101,7 @@ const SuikaGame = () => {
     setIsItemActive(false);
     setIsShakeActive(false);
     setIsCanvasShaking(false);
+    setHasUsedRevive(false);
     clear();
   }
 
@@ -118,6 +120,7 @@ const SuikaGame = () => {
     
     // 부활 후 게임오버 상태를 해제하고 게임 재시작
     setIsGameOver(false);
+    setHasUsedRevive(true);
     console.log('Game over state set to false'); // 디버깅용
     
     // 새로운 다음 아이템 설정
@@ -239,6 +242,7 @@ const SuikaGame = () => {
         isVisible={isGameOver} 
         onClick={handleTryAgain} 
         onContinue={handleContinueWithAd}
+        hasUsedRevive={hasUsedRevive}
         score={score} 
       />
       

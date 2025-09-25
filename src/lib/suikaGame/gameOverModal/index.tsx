@@ -8,12 +8,13 @@ interface GameOverModalProps {
   isVisible: boolean;
   onClick: () => void;
   onContinue: () => void;
+  hasUsedRevive: boolean;
   score: number;
 }
 
 let timeout: NodeJS.Timeout | null = null;
 
-const GameOverModal = ({ isVisible, onClick, onContinue, score }: GameOverModalProps) => {
+const GameOverModal = ({ isVisible, onClick, onContinue, hasUsedRevive, score }: GameOverModalProps) => {
   const [toastVisible, setToastVisible] = useState(false);
   const [showFinalScore, setShowFinalScore] = useState(false);
 
@@ -94,6 +95,31 @@ const GameOverModal = ({ isVisible, onClick, onContinue, score }: GameOverModalP
   }
 
   // 부활 화면
+  if (hasUsedRevive) {
+    // 이미 부활을 사용했다면 바로 최종 점수 화면으로
+    return (
+      <div className={cx('gameOverArea')}>
+        <div className={cx('finalScoreContainer')}>
+          <h1 className={cx('gameOverTitle')}>GAME OVER</h1>
+          <div className={cx('finalScoreDisplay')}>
+            <span className={cx('scoreLabel')}>최종 점수</span>
+            <span className={cx('finalScore')}>{score}</span>
+          </div>
+          <div className={cx('finalButtonContainer')}>
+            <button className={cx('shareButton')} onClick={share}>
+              공유하기
+            </button>
+            <button className={cx('restartButton')} onClick={handleTryAgain}>
+              다시하기
+            </button>
+          </div>
+        </div>
+        <div className={cx('toastArea', { show: toastVisible })}>🍉URL이 복사되었습니다.</div>
+      </div>
+    );
+  }
+
+  // 첫 번째 게임오버 - 부활 화면
   return (
     <div className={cx('gameOverArea')}>
       <div className={cx('reviveContainer')}>
