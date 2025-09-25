@@ -259,8 +259,18 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
       if (labelA === labelB) {
         prevMergingFruitIds = [bodyA.id, bodyB.id];
         
+        // 캔버스 진동 효과 추가
+        const canvasWrap = document.getElementById('canvasWrap');
+        if (canvasWrap) {
+          canvasWrap.classList.add('merging');
+          setTimeout(() => {
+            canvasWrap.classList.remove('merging');
+          }, 300);
+        }
+        
         // 과일이 합쳐질 때 사운드 효과
         const popSound = new Audio(require('../../resource/pop2.mp3'));
+        popSound.volume = 0.7; // 볼륨 증가
         popSound.play();
 
         World.remove(engine.world, bodyA);
@@ -271,6 +281,38 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
         
         // 수박이 만들어지면 별 이펙트
         if(labelA === Fruit.MELON) effects.fireRapidStarConfetti();
+        
+        // 일반 합치기 효과 (작은 폭죽)
+        if(labelA !== Fruit.MELON) {
+          // 작은 폭죽 효과
+          const miniConfetti = () => {
+            const count = 30;
+            const defaults = {
+              origin: { x: midX / getRenderWidth(), y: midY / getRenderHeight() },
+            };
+            
+            function fire(particleRatio: number, opts: any) {
+              (window as any).confetti({
+                ...defaults,
+                ...opts,
+                particleCount: Math.floor(count * particleRatio),
+              });
+            }
+            
+            fire(0.6, {
+              spread: 60,
+              startVelocity: 30,
+              decay: 0.9,
+              scalar: 0.7,
+              colors: ['#FFD700', '#FFA500', '#FF69B4']
+            });
+          };
+          
+          // confetti 라이브러리가 로드되어 있는지 확인
+          if (typeof (window as any).confetti !== 'undefined') {
+            miniConfetti();
+          }
+        }
         
         // 수박끼리 합쳐지면 더 이상 진행하지 않음
         if (!feature) return;
