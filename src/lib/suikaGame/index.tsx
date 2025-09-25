@@ -81,6 +81,7 @@ const SuikaGame = () => {
   }, [isGameOver]);
 
   useEffect(() => {
+    console.log('isGameOver state changed:', isGameOver); // 디버깅용
     if(isGameOver) {
       const bestScore = localStorage.getItem('bestScore') || 0;
       if (score > Number(bestScore)) {
@@ -226,6 +227,7 @@ const SuikaGame = () => {
         lastDroppedFruit={lastDroppedFruit}
       />
       
+      {console.log('Rendering GameOverModal with isVisible:', isGameOver)}
       <ItemUsageModal 
         isVisible={showItemModal}
         onClose={() => setShowItemModal(false)}
