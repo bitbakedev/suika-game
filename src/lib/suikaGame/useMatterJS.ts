@@ -59,7 +59,6 @@ let isShakeItemActive: boolean = false;
 let isDangerZone: boolean = false;
 let lastDroppedItemId: number | null = null;
 let itemSettleTimeout: NodeJS.Timeout | null = null;
-let itemSettleTimeout: NodeJS.Timeout | null = null;
 
 const renderOptions = {
   width: getRenderWidth(),
