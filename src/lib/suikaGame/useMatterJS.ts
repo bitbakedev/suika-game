@@ -115,8 +115,8 @@ const createFixedItem = (propsRef: React.RefObject<UseMatterJSProps>) => {
     render: {
       sprite: {
         texture: getImgUrl(label),
-        xScale: (radius * 2) / 250,
-        yScale: (radius * 2) / 250,
+        xScale: (radius * 2.2) / 250,
+        yScale: (radius * 2.2) / 250,
       }
     }
   });
