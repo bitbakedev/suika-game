@@ -7,23 +7,23 @@ const cx = classNames.bind(styles);
 
 interface FruitPreviewProps {
   onRestart: () => void;
-  lastDroppedFruit?: Fruit | null;
+  lastMergedFruit?: Fruit | null;
 }
 
-const FruitPreview = ({ onRestart, lastDroppedFruit }: FruitPreviewProps) => {
+const FruitPreview = ({ onRestart, lastMergedFruit }: FruitPreviewProps) => {
   const fruits = Object.values(Fruit);
   const [animatingFruit, setAnimatingFruit] = useState<Fruit | null>(null);
 
   useEffect(() => {
-    if (lastDroppedFruit) {
-      setAnimatingFruit(lastDroppedFruit);
+    if (lastMergedFruit) {
+      setAnimatingFruit(lastMergedFruit);
       const timer = setTimeout(() => {
         setAnimatingFruit(null);
       }, 600); // 애니메이션 지속 시간
       
       return () => clearTimeout(timer);
     }
-  }, [lastDroppedFruit]);
+  }, [lastMergedFruit]);
 
   const getImageUrl = (fruit: Fruit) => {
     if (fruit === Fruit.BLUEBERRY) {

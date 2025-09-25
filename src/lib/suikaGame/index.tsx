@@ -26,7 +26,7 @@ const SuikaGame = () => {
   const [showExhaustedModal, setShowExhaustedModal] = useState<boolean>(false);
   const [exhaustedItemType, setExhaustedItemType] = useState<'remove' | 'shake'>('remove');
   const [showRestartModal, setShowRestartModal] = useState<boolean>(false);
-  const [lastDroppedFruit, setLastDroppedFruit] = useState<Fruit | null>(null);
+  const [lastMergedFruit, setLastMergedFruit] = useState<Fruit | null>(null);
 
   const getImageUrl = (fruit: Fruit) => {
     if (fruit === Fruit.BLUEBERRY) {
@@ -72,7 +72,7 @@ const SuikaGame = () => {
     setNextItem, 
     isGameOver, 
     setIsGameOver,
-    setLastDroppedFruit
+    setLastMergedFruit
   });
 
   useEffect(() => {
@@ -225,7 +225,7 @@ const SuikaGame = () => {
 
       <FruitPreview 
         onRestart={handleRestartClick} 
-        lastDroppedFruit={lastDroppedFruit}
+        lastMergedFruit={lastMergedFruit}
       />
       
       <GameOverModal 

@@ -211,11 +211,6 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
     popSound.play();
     const label = fixedItem?.label as Fruit;
     
-    // 떨어뜨린 과일을 프리뷰에 알림
-    if (propsRef.current) {
-      propsRef.current.setLastDroppedFruit(label);
-    }
-    
     const feature = getFruitFeature(label);
     const radius = feature?.radius || 1;
     const mass = feature?.mass || 1;
@@ -339,6 +334,8 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
         World.add(engine.world, newFruit);
         if (propsRef.current) {
           propsRef.current.setScore(prev => prev + score);
+          // 새로 생성된 과일을 프리뷰에 알림 (합쳐진 결과)
+          propsRef.current.setLastMergedFruit(label);
         }
       }
     });
@@ -371,7 +368,7 @@ interface UseMatterJSProps {
   setNextItem: React.Dispatch<SetStateAction<Fruit>>;
   isGameOver: boolean;
   setIsGameOver: React.Dispatch<SetStateAction<boolean>>;
-  setLastDroppedFruit: React.Dispatch<SetStateAction<Fruit | null>>;
+  setLastMergedFruit: React.Dispatch<SetStateAction<Fruit | null>>;
 }
 
 const useMatterJS = (props: UseMatterJSProps) => {
