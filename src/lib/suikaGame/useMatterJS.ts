@@ -129,6 +129,7 @@ const createFixedItem = (propsRef: React.RefObject<UseMatterJSProps>) => {
 
 const handleGameOver = (propsRef: React.RefObject<UseMatterJSProps>) => {
   if (!propsRef.current) return;
+  if (propsRef.current.isGameOver) return; // 이미 게임오버 상태면 중복 처리 방지
   propsRef.current.setIsGameOver(true);
   requestAnimation && cancelAnimationFrame(requestAnimation);
 }
@@ -238,7 +239,11 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
       const bodyA = pair.bodyA;
       const bodyB = pair.bodyB;
       
-      if ((bodyA.label === GameOverLine.label || bodyB.label === GameOverLine.label) && !isShakeItemActive) {
+      // 게임오버 체크 - 이미 게임오버 상태이거나 흔들기 중이면 무시
+      if ((bodyA.label === GameOverLine.label || bodyB.label === GameOverLine.label) && 
+          !isShakeItemActive && 
+          propsRef.current && 
+          !propsRef.current.isGameOver) {
         handleGameOver(propsRef);
         return;
       }
