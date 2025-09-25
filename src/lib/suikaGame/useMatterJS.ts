@@ -69,11 +69,9 @@ const renderOptions = {
   showVelocity: false,
 };
 
-const updateGuideLineColor = () => {
-  const color = isDangerZone ? '#ff0000aa' : GuideLineColor;
-  GuideLine.forEach(dash => {
-    dash.render.fillStyle = color;
-  });
+const updateGameOverGuideLineColor = () => {
+  const color = isDangerZone ? '#ff0000aa' : '#ffffff20';
+  GameOverGuideLine.render.fillStyle = color;
 };
 
 const checkDangerZone = () => {
@@ -88,7 +86,7 @@ const checkDangerZone = () => {
   
   if (fruitsInDangerZone !== isDangerZone) {
     isDangerZone = fruitsInDangerZone;
-    updateGuideLineColor();
+    updateGameOverGuideLineColor();
   }
 };
 const init = (propsRef: React.RefObject<UseMatterJSProps>) => {
@@ -486,7 +484,7 @@ const useMatterJS = (props: UseMatterJSProps) => {
     
     // 위험 상태 해제
     isDangerZone = false;
-    updateGuideLineColor();
+    updateGameOverGuideLineColor();
   }
 
   const shakeCanvas = () => {
