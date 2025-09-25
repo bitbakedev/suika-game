@@ -222,6 +222,12 @@ const SuikaGame = () => {
 
       <FruitPreview onRestart={handleRestartClick} />
       
+      <GameOverModal 
+        isVisible={isGameOver} 
+        onClick={handleTryAgain} 
+        onContinue={handleContinueWithAd}
+        score={score} 
+      />
       
       <ItemUsageModal 
         isVisible={showItemModal}

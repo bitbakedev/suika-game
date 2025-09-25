@@ -132,6 +132,7 @@ const handleGameOver = (propsRef: React.RefObject<UseMatterJSProps>) => {
   if (propsRef.current.isGameOver) return;
   
   console.log('Game Over triggered!'); // 디버깅용
+  console.log('Setting isGameOver to true'); // 디버깅용
   propsRef.current.setIsGameOver(true);
   
   // 애니메이션 정리
@@ -139,6 +140,11 @@ const handleGameOver = (propsRef: React.RefObject<UseMatterJSProps>) => {
     cancelAnimationFrame(requestAnimation);
     requestAnimation = null;
   }
+  
+  // 상태 확인
+  setTimeout(() => {
+    console.log('After timeout - isGameOver:', propsRef.current?.isGameOver);
+  }, 100);
 }
 
 const clamp = (value: number, min: number, max: number) => {
