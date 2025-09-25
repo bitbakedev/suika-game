@@ -270,7 +270,7 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
           return;
         }
         
-        console.log('Game over collision detected with:', otherBody.label);
+        console.log('Game over collision detected with:', otherBody.label, 'at canvas top');
         handleGameOver(propsRef);
         return;
       }
@@ -430,10 +430,10 @@ const useMatterJS = (props: UseMatterJSProps) => {
   }
 
   const removeGameOverLineFruits = () => {
-    const gameOverLineY = getRenderHeight() / 6.5 - 30;
+    const gameOverLineY = getRenderHeight() / 6.5; // 시각적 가이드 라인 기준
     const bodiesToRemove = engine.world.bodies.filter(body => {
       const label = body.label as Fruit;
-      // 게임오버 라인 위에 있는 과일들만 제거 (고정 아이템과 센서는 제외)
+      // 시각적 가이드 라인 위에 있는 과일들만 제거 (고정 아이템과 센서는 제외)
       return Object.values(Fruit).includes(label as Fruit) && 
              !body.isStatic && 
              !body.isSensor && 
