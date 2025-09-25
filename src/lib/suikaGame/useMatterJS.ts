@@ -57,6 +57,7 @@ let nextFruit: Fruit | null = null;
 let prevMergingFruitIds: number[] = [];
 let isShakeItemActive: boolean = false;
 let isDangerZone: boolean = false;
+let lastDroppedItemId: number | null = null;
 
 const renderOptions = {
   width: getRenderWidth(),
@@ -75,17 +76,22 @@ const updateGameOverGuideLineColor = () => {
 };
 
 const checkDangerZone = () => {
-  const gameOverLineY = getRenderHeight() / 6.5;
-  const fruitsInDangerZone = engine.world.bodies.some(body => {
-    const label = body.label as Fruit;
-    return Object.values(Fruit).includes(label as Fruit) && 
-           !body.isStatic && 
-           !body.isSensor && 
-           body.position.y < gameOverLineY;
-  });
+  // 떨어뜨린 아이템이 있을 때만 체크
+  if (!lastDroppedItemId) {
+    return;
+  }
   
-  if (fruitsInDangerZone !== isDangerZone) {
-    isDangerZone = fruitsInDangerZone;
+  const gameOverLineY = getRenderHeight() / 6.5;
+  const droppedItem = engine.world.bodies.find(body => body.id === lastDroppedItemId);
+  
+  // 떨어뜨린 아이템이 게임오버 라인 위에 있는지 체크
+  const isDroppedItemInDanger = droppedItem && 
+    droppedItem.position.y < gameOverLineY && 
+    !droppedItem.isStatic && 
+    !droppedItem.isSensor;
+  
+  if (!!isDroppedItemInDanger !== isDangerZone) {
+    isDangerZone = !!isDroppedItemInDanger;
     updateGameOverGuideLineColor();
   }
 };
@@ -262,6 +268,9 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
     fixedItem = null;
     World.add(engine.world, newItem);
 
+    // 떨어뜨린 아이템 ID 저장
+    lastDroppedItemId = newItem.id;
+
     fixedItemTimeOut = setTimeout(() => {
       // 모든 대시 라인들을 다시 보이게 만들기
       GuideLine.forEach(dash => {
@@ -358,6 +367,11 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
           // 새로 생성된 과일을 프리뷰에 알림 (합쳐진 결과)
           propsRef.current.setLastMergedFruit(label);
         }
+        
+        // 합쳐진 후 새로운 과일이 떨어뜨린 아이템이 됨
+        if (bodyA.id === lastDroppedItemId || bodyB.id === lastDroppedItemId) {
+          lastDroppedItemId = newFruit.id;
+        }
       }
     });
   });
@@ -420,6 +434,7 @@ const useMatterJS = (props: UseMatterJSProps) => {
     fixedItem = null;
     isShakeItemActive = false;
     isDangerZone = false;
+    lastDroppedItemId = null;
     
     // 기존 애니메이션 정리
     if (requestAnimation) {
