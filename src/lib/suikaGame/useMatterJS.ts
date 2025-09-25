@@ -58,6 +58,7 @@ let prevMergingFruitIds: number[] = [];
 let isShakeItemActive: boolean = false;
 let isDangerZone: boolean = false;
 let lastDroppedItemId: number | null = null;
+let itemSettleTimeout: NodeJS.Timeout | null = null;
 
 const renderOptions = {
   width: getRenderWidth(),
@@ -76,23 +77,25 @@ const updateGameOverGuideLineColor = () => {
 };
 
 const checkDangerZone = () => {
-  // 떨어뜨린 아이템이 있을 때만 체크
-  if (!lastDroppedItemId) {
-    return;
-  }
-  
-  const gameOverLineY = getRenderHeight() / 6.5;
-  const droppedItem = engine.world.bodies.find(body => body.id === lastDroppedItemId);
-  
-  // 떨어뜨린 아이템이 게임오버 라인 위에 있는지 체크
-  const isDroppedItemInDanger = droppedItem && 
-    droppedItem.position.y < gameOverLineY && 
-    !droppedItem.isStatic && 
-    !droppedItem.isSensor;
-  
-  if (!!isDroppedItemInDanger !== isDangerZone) {
-    isDangerZone = !!isDroppedItemInDanger;
-    updateGameOverGuideLineColor();
+  // 아이템이 정착한 후에만 위험 상태 체크 (속도가 거의 0에 가까울 때)
+  if (lastDroppedItemId) {
+    const droppedItem = engine.world.bodies.find(body => body.id === lastDroppedItemId);
+    
+    if (droppedItem && !droppedItem.isStatic && !droppedItem.isSensor) {
+      const velocity = Math.sqrt(droppedItem.velocity.x ** 2 + droppedItem.velocity.y ** 2);
+      const angularVelocity = Math.abs(droppedItem.angularVelocity);
+      
+      // 아이템이 거의 정지 상태일 때만 위험 상태 체크
+      if (velocity < 0.5 && angularVelocity < 0.1) {
+        const gameOverLineY = getRenderHeight() / 6.5;
+        const isDroppedItemInDanger = droppedItem.position.y < gameOverLineY;
+        
+        if (isDroppedItemInDanger !== isDangerZone) {
+          isDangerZone = isDroppedItemInDanger;
+          updateGameOverGuideLineColor();
+        }
+      }
+    }
   }
 };
 const init = (propsRef: React.RefObject<UseMatterJSProps>) => {
@@ -270,6 +273,10 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
 
     // 떨어뜨린 아이템 ID 저장
     lastDroppedItemId = newItem.id;
+    
+    // 위험 상태 초기화 (새 아이템이므로)
+    isDangerZone = false;
+    updateGameOverGuideLineColor();
 
     fixedItemTimeOut = setTimeout(() => {
       // 모든 대시 라인들을 다시 보이게 만들기
@@ -435,6 +442,12 @@ const useMatterJS = (props: UseMatterJSProps) => {
     isShakeItemActive = false;
     isDangerZone = false;
     lastDroppedItemId = null;
+    
+    // 타이머 정리
+    if (itemSettleTimeout) {
+      clearTimeout(itemSettleTimeout);
+      itemSettleTimeout = null;
+    }
     
     // 기존 애니메이션 정리
     if (requestAnimation) {
