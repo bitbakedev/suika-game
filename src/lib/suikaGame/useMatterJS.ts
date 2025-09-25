@@ -469,6 +469,17 @@ const useMatterJS = (props: UseMatterJSProps) => {
     
     World.remove(engine.world, bodiesToRemove);
     
+    // 부활 후 게임 재시작을 위한 설정
+    if (requestAnimation) {
+      cancelAnimationFrame(requestAnimation);
+      requestAnimation = null;
+    }
+    
+    // 엔진과 렌더링 재시작
+    if (render) {
+      animate(0);
+      Render.run(render);
+    }
   }
 
   const shakeCanvas = () => {

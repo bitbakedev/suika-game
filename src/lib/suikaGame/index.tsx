@@ -115,9 +115,14 @@ const SuikaGame = () => {
     console.log('handleContinueWithAd called'); // 디버깅용
     // 시각적 가이드 라인 위의 과일들 제거하여 부활
     removeGameOverLineFruits();
-    // 부활 후 게임오버 상태를 해제
+    
+    // 부활 후 게임오버 상태를 해제하고 게임 재시작
     setIsGameOver(false);
     console.log('Game over state set to false'); // 디버깅용
+    
+    // 새로운 다음 아이템 설정
+    const newNextItem = getRandomFruitFeature()?.label as Fruit;
+    setNextItem(newNextItem);
   }
 
   const handleClose = () => {
