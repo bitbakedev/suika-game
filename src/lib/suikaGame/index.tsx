@@ -64,7 +64,7 @@ const SuikaGame = () => {
     return require('../../resource/' + fruit + '.png');
   };
 
-  const { clear, removeSmallFruits, shakeCanvas } = useMatterJS({ 
+  const { clear, removeSmallFruits, shakeCanvas, removeGameOverLineFruits } = useMatterJS({
     score, 
     setScore, 
     nextItem, 
@@ -105,6 +105,12 @@ const SuikaGame = () => {
 
   const handleRestartConfirm = () => {
     handleTryAgain();
+  }
+
+  const handleContinueWithAd = () => {
+    // 게임오버 라인 위의 과일들 제거
+    removeGameOverLineFruits();
+    setIsGameOver(false);
   }
 
   const handleClose = () => {
@@ -214,7 +220,6 @@ const SuikaGame = () => {
 
       <FruitPreview onRestart={handleRestartClick} />
       
-      <GameOverModal isVisible={isGameOver} onClick={handleTryAgain} score={score} />
       
       <ItemUsageModal 
         isVisible={showItemModal}

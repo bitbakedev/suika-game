@@ -387,6 +387,31 @@ const useMatterJS = (props: UseMatterJSProps) => {
     World.remove(engine.world, bodiesToRemove);
   }
 
+  const removeGameOverLineFruits = () => {
+    const gameOverLineY = getRenderHeight() / 6.5 - 30;
+    const bodiesToRemove = engine.world.bodies.filter(body => {
+      const label = body.label as Fruit;
+      // 게임오버 라인 위에 있는 과일들만 제거 (고정 아이템과 센서는 제외)
+      return Object.values(Fruit).includes(label as Fruit) && 
+             !body.isStatic && 
+             !body.isSensor && 
+             body.position.y < gameOverLineY;
+    });
+    
+    // 제거된 과일이 있을 때만 효과 실행
+    if (bodiesToRemove.length > 0) {
+      // 깔끔한 빵빠레 효과
+      fireConfetti();
+      
+      // 사운드 효과
+      const popSound = new Audio(require('../../resource/pop2.mp3'));
+      popSound.volume = 0.4;
+      popSound.play();
+    }
+    
+    World.remove(engine.world, bodiesToRemove);
+  }
+
   const shakeCanvas = () => {
     isShakeItemActive = true;
     
@@ -438,7 +463,8 @@ const useMatterJS = (props: UseMatterJSProps) => {
   return {
     clear,
     removeSmallFruits,
-    shakeCanvas
+    shakeCanvas,
+    removeGameOverLineFruits
   }
 };
 
