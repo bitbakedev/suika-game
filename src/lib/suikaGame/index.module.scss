@@ -8,6 +8,12 @@
   position: relative;
   font-family: 'Helvetica Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'SF Pro Display', system-ui, sans-serif;
   font-weight: 900;
+  
+  /* 게임오버 모달이 다른 요소들 위에 표시되도록 */
+  & > * {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 .topArea {

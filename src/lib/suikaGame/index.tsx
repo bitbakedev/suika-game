@@ -227,7 +227,13 @@ const SuikaGame = () => {
         lastDroppedFruit={lastDroppedFruit}
       />
       
-      {console.log('Rendering GameOverModal with isVisible:', isGameOver)}
+      <GameOverModal 
+        isVisible={isGameOver} 
+        onClick={handleTryAgain} 
+        onContinue={handleContinueWithAd}
+        score={score} 
+      />
+      
       <ItemUsageModal 
         isVisible={showItemModal}
         onClose={() => setShowItemModal(false)}

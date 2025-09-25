@@ -17,9 +17,8 @@ const GameOverModal = ({ isVisible, onClick, onContinue, score }: GameOverModalP
   const [toastVisible, setToastVisible] = useState(false);
   const [showAdModal, setShowAdModal] = useState(false);
 
-  console.log('GameOverModal render - isVisible:', isVisible); // 디버깅용
+  console.log('GameOverModal render - isVisible:', isVisible, 'showAdModal:', showAdModal); // 디버깅용
   
-  if (!isVisible) return null;
 
   const handleContinueClick = () => {
     setShowAdModal(true);
