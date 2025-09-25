@@ -28,7 +28,6 @@ const SuikaGame = () => {
   const [showRestartModal, setShowRestartModal] = useState<boolean>(false);
 
   const getImageUrl = (fruit: Fruit) => {
-    console.log('Game state - isGameOver:', isGameOver); // 디버깅용
     if (fruit === Fruit.BLUEBERRY) {
       return require('../../resource/BREAD1.png');
     }
@@ -222,12 +221,6 @@ const SuikaGame = () => {
 
       <FruitPreview onRestart={handleRestartClick} />
       
-      <GameOverModal 
-        isVisible={isGameOver} 
-        onClick={handleTryAgain} 
-        onContinue={handleContinueWithAd}
-        score={score} 
-      />
       
       <ItemUsageModal 
         isVisible={showItemModal}

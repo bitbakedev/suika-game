@@ -14,7 +14,6 @@ interface GameOverModalProps {
 let timeout: NodeJS.Timeout | null = null;
 
 const GameOverModal = ({ isVisible, onClick, onContinue, score }: GameOverModalProps) => {
-  console.log('GameOverModal render - isVisible:', isVisible); // 디버깅용
   const [toastVisible, setToastVisible] = useState(false);
   const [showAdModal, setShowAdModal] = useState(false);
 
