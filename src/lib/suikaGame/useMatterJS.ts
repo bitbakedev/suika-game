@@ -56,6 +56,7 @@ let prevPosition = { x: getRenderWidth() / 2, y: 50 };
 let nextFruit: Fruit | null = null;
 let prevMergingFruitIds: number[] = [];
 let isShakeItemActive: boolean = false;
+let isDangerZone: boolean = false;
 
 const renderOptions = {
   width: getRenderWidth(),
@@ -68,6 +69,28 @@ const renderOptions = {
   showVelocity: false,
 };
 
+const updateGuideLineColor = () => {
+  const color = isDangerZone ? '#ff0000aa' : GuideLineColor;
+  GuideLine.forEach(dash => {
+    dash.render.fillStyle = color;
+  });
+};
+
+const checkDangerZone = () => {
+  const gameOverLineY = getRenderHeight() / 6.5;
+  const fruitsInDangerZone = engine.world.bodies.some(body => {
+    const label = body.label as Fruit;
+    return Object.values(Fruit).includes(label as Fruit) && 
+           !body.isStatic && 
+           !body.isSensor && 
+           body.position.y < gameOverLineY;
+  });
+  
+  if (fruitsInDangerZone !== isDangerZone) {
+    isDangerZone = fruitsInDangerZone;
+    updateGuideLineColor();
+  }
+};
 const init = (propsRef: React.RefObject<UseMatterJSProps>) => {
   const canvasWrapEl = document.getElementById('canvasWrap');
   if (!canvasWrapEl) return;
@@ -350,6 +373,9 @@ const animate = (currentTime: number) => {
   const elapsed = currentTime - lastTime;
 
   if (elapsed > frameInterval) {
+    // 위험 구역 체크
+    checkDangerZone();
+    
     Engine.update(engine, frameInterval);
     lastTime = currentTime - (elapsed % frameInterval);
   }
@@ -395,6 +421,7 @@ const useMatterJS = (props: UseMatterJSProps) => {
   const clear = () => {
     fixedItem = null;
     isShakeItemActive = false;
+    isDangerZone = false;
     
     // 기존 애니메이션 정리
     if (requestAnimation) {
@@ -431,6 +458,8 @@ const useMatterJS = (props: UseMatterJSProps) => {
 
   const removeGameOverLineFruits = () => {
     const gameOverLineY = getRenderHeight() / 6.5; // 시각적 가이드 라인 기준
+    console.log('Removing fruits above line at Y:', gameOverLineY); // 디버깅용
+    
     const bodiesToRemove = engine.world.bodies.filter(body => {
       const label = body.label as Fruit;
       // 시각적 가이드 라인 위에 있는 과일들만 제거 (고정 아이템과 센서는 제외)
@@ -439,6 +468,8 @@ const useMatterJS = (props: UseMatterJSProps) => {
              !body.isSensor && 
              body.position.y < gameOverLineY;
     });
+    
+    console.log('Bodies to remove:', bodiesToRemove.length); // 디버깅용
     
     // 제거된 과일이 있을 때만 효과 실행
     if (bodiesToRemove.length > 0) {
@@ -452,6 +483,10 @@ const useMatterJS = (props: UseMatterJSProps) => {
     }
     
     World.remove(engine.world, bodiesToRemove);
+    
+    // 위험 상태 해제
+    isDangerZone = false;
+    updateGuideLineColor();
   }
 
   const shakeCanvas = () => {

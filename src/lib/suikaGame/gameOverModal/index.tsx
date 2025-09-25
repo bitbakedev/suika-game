@@ -22,9 +22,9 @@ const GameOverModal = ({ isVisible, onClick, onContinue, score }: GameOverModalP
   if (!isVisible) return null;
 
   const handleReviveClick = () => {
-    // 부활 기능 실행
+    console.log('Revive button clicked'); // 디버깅용
     onContinue();
-    // 모달을 닫지 않고 게임을 계속 진행할 수 있도록 함
+    setShowFinalScore(false); // 부활 후 모달 닫기
   };
 
   const handleCloseClick = () => {

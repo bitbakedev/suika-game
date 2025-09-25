@@ -112,10 +112,12 @@ const SuikaGame = () => {
   }
 
   const handleContinueWithAd = () => {
+    console.log('handleContinueWithAd called'); // 디버깅용
     // 시각적 가이드 라인 위의 과일들 제거하여 부활
     removeGameOverLineFruits();
     // 부활 후 게임오버 상태를 해제
     setIsGameOver(false);
+    console.log('Game over state set to false'); // 디버깅용
   }
 
   const handleClose = () => {
