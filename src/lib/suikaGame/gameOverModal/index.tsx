@@ -15,33 +15,31 @@ let timeout: NodeJS.Timeout | null = null;
 
 const GameOverModal = ({ isVisible, onClick, onContinue, score }: GameOverModalProps) => {
   const [toastVisible, setToastVisible] = useState(false);
-  const [showAdModal, setShowAdModal] = useState(false);
+  const [showFinalScore, setShowFinalScore] = useState(false);
 
-  console.log('GameOverModal render - isVisible:', isVisible, 'showAdModal:', showAdModal); // 디버깅용
-  
+  console.log('GameOverModal render - isVisible:', isVisible, 'showFinalScore:', showFinalScore);
 
-  const handleContinueClick = () => {
-    setShowAdModal(true);
-  };
+  if (!isVisible) return null;
 
-  const handleWatchAd = () => {
-    // 여기서 실제 광고를 보여주는 로직을 추가할 수 있습니다
-    // 현재는 바로 계속하기 기능을 실행합니다
-    setShowAdModal(false);
+  const handleReviveClick = () => {
     onContinue();
   };
 
-  const handleCloseAdModal = () => {
-    setShowAdModal(false);
+  const handleCloseClick = () => {
+    setShowFinalScore(true);
+  };
+
+  const handleTryAgain = () => {
+    setShowFinalScore(false);
+    onClick();
   };
 
   const share = () => {
-
     if (navigator.share) {
       navigator.share({
         title: '수박 만들기 게임',
-        text: '과일들을 모아 수박을 만들어보세요.',
-        url: 'https://koreacat.github.io/suika-game/',
+        text: `${score}점을 획득했습니다! 과일들을 모아 수박을 만들어보세요.`,
+        url: window.location.href,
       })
         .then(() => console.log('done'))
         .catch((error) => console.log(error));
@@ -69,56 +67,55 @@ const GameOverModal = ({ isVisible, onClick, onContinue, score }: GameOverModalP
     }
   }
 
-  if (showAdModal) {
+  // 최종 점수 화면
+  if (showFinalScore) {
     return (
       <div className={cx('gameOverArea')}>
-        <div className={cx('adModalContainer')}>
-          <div className={cx('adModalHeader')}>
-            <h2 className={cx('adModalTitle')}>게임 계속하기</h2>
+        <div className={cx('finalScoreContainer')}>
+          <h1 className={cx('gameOverTitle')}>GAME OVER</h1>
+          <div className={cx('finalScoreDisplay')}>
+            <span className={cx('scoreLabel')}>최종 점수</span>
+            <span className={cx('finalScore')}>{score}</span>
           </div>
-          
-          <div className={cx('adModalContent')}>
-            <div className={cx('adIconContainer')}>
-              <svg width="60" height="60" viewBox="0 0 24 24" fill="none">
-                <path d="M8 5v14l11-7z" fill="#FFD700" stroke="#D2691E" strokeWidth="1"/>
-              </svg>
-            </div>
-            <p className={cx('adModalDescription')}>
-              광고를 보고 게임을 계속하시겠습니까?
-            </p>
-            <p className={cx('adModalSubDescription')}>
-              게임오버 라인 위의 빵들이 제거되고 게임이 계속됩니다.
-            </p>
-          </div>
-          
-          <div className={cx('adModalActions')}>
-            <button className={cx('cancelAdButton')} onClick={handleCloseAdModal}>
-              취소
+          <div className={cx('finalButtonContainer')}>
+            <button className={cx('shareButton')} onClick={share}>
+              공유하기
             </button>
-            <button className={cx('watchAdButton')} onClick={handleWatchAd}>
-              광고 보기
+            <button className={cx('restartButton')} onClick={handleTryAgain}>
+              다시하기
             </button>
           </div>
-          
-          <button className={cx('closeAdButton')} onClick={handleCloseAdModal}>
-            ×
-          </button>
         </div>
+        <div className={cx('toastArea', { show: toastVisible })}>🍉URL이 복사되었습니다.</div>
       </div>
     );
   }
 
+  // 부활 화면
   return (
     <div className={cx('gameOverArea')}>
-      <span className={cx('text')}>GAME OVER</span>
-      <span className={cx('score')}>SCORE: {score}</span>
-      <div className={cx('buttonContainer')}>
-        <button className={cx('continueBtn')} onClick={handleContinueClick}>📺 CONTINUE?</button>
-        <button className={cx('btn')} onClick={onClick}>↻ TRY AGAIN?</button>
+      <div className={cx('reviveContainer')}>
+        <button className={cx('closeReviveButton')} onClick={handleCloseClick}>
+          ×
+        </button>
+        
+        <div className={cx('reviveContent')}>
+          <div className={cx('reviveIconContainer')}>
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z" fill="#FFD700" stroke="#D2691E" strokeWidth="1"/>
+            </svg>
+          </div>
+          
+          <h2 className={cx('reviveTitle')}>광고를 보고 부활할까요?</h2>
+          <p className={cx('reviveDescription')}>부활시 넘친 과일은 사라져요.</p>
+          
+          <button className={cx('reviveButton')} onClick={handleReviveClick}>
+            부활하기
+          </button>
+        </div>
       </div>
-      <div className={cx('toastArea', { show: toastVisible })}>🍉URL이 복사되었습니다.</div>
     </div>
-  )
+  );
 }
 
 export default GameOverModal;
