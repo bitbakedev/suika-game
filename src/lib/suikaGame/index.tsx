@@ -26,6 +26,7 @@ const SuikaGame = () => {
   const [showExhaustedModal, setShowExhaustedModal] = useState<boolean>(false);
   const [exhaustedItemType, setExhaustedItemType] = useState<'remove' | 'shake'>('remove');
   const [showRestartModal, setShowRestartModal] = useState<boolean>(false);
+  const [lastDroppedFruit, setLastDroppedFruit] = useState<Fruit | null>(null);
 
   const getImageUrl = (fruit: Fruit) => {
     if (fruit === Fruit.BLUEBERRY) {
@@ -70,7 +71,8 @@ const SuikaGame = () => {
     nextItem, 
     setNextItem, 
     isGameOver, 
-    setIsGameOver 
+    setIsGameOver,
+    setLastDroppedFruit
   });
 
   useEffect(() => {
@@ -219,8 +221,10 @@ const SuikaGame = () => {
         </div>
       </div>
 
-      <FruitPreview onRestart={handleRestartClick} />
-      
+      <FruitPreview 
+        onRestart={handleRestartClick} 
+        lastDroppedFruit={lastDroppedFruit}
+      />
       
       <ItemUsageModal 
         isVisible={showItemModal}

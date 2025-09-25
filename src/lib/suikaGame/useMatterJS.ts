@@ -200,6 +200,12 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
     const popSound = new Audio(require('../../resource/pop.mp3'));
     popSound.play();
     const label = fixedItem?.label as Fruit;
+    
+    // 떨어뜨린 과일을 프리뷰에 알림
+    if (propsRef.current) {
+      propsRef.current.setLastDroppedFruit(label);
+    }
+    
     const feature = getFruitFeature(label);
     const radius = feature?.radius || 1;
     const mass = feature?.mass || 1;
@@ -355,6 +361,7 @@ interface UseMatterJSProps {
   setNextItem: React.Dispatch<SetStateAction<Fruit>>;
   isGameOver: boolean;
   setIsGameOver: React.Dispatch<SetStateAction<boolean>>;
+  setLastDroppedFruit: React.Dispatch<SetStateAction<Fruit | null>>;
 }
 
 const useMatterJS = (props: UseMatterJSProps) => {

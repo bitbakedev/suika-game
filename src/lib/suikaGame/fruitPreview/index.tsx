@@ -1,15 +1,29 @@
 import { Fruit } from '../object/Fruit';
 import styles from './index.module.scss';
 import classNames from "classnames/bind";
+import { useEffect, useState } from 'react';
 
 const cx = classNames.bind(styles);
 
 interface FruitPreviewProps {
   onRestart: () => void;
+  lastDroppedFruit?: Fruit | null;
 }
 
-const FruitPreview = ({ onRestart }: FruitPreviewProps) => {
+const FruitPreview = ({ onRestart, lastDroppedFruit }: FruitPreviewProps) => {
   const fruits = Object.values(Fruit);
+  const [animatingFruit, setAnimatingFruit] = useState<Fruit | null>(null);
+
+  useEffect(() => {
+    if (lastDroppedFruit) {
+      setAnimatingFruit(lastDroppedFruit);
+      const timer = setTimeout(() => {
+        setAnimatingFruit(null);
+      }, 600); // 애니메이션 지속 시간
+      
+      return () => clearTimeout(timer);
+    }
+  }, [lastDroppedFruit]);
 
   const getImageUrl = (fruit: Fruit) => {
     if (fruit === Fruit.BLUEBERRY) {
@@ -58,7 +72,9 @@ const FruitPreview = ({ onRestart }: FruitPreviewProps) => {
           {fruits.map((fruit, index) => (
             <div 
               key={fruit} 
-              className={cx('fruitItem')}
+              className={cx('fruitItem', { 
+                animating: animatingFruit === fruit 
+              })}
               style={{ 
                 backgroundImage: `url(${getImageUrl(fruit)})`
               }}
