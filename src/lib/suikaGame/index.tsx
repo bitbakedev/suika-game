@@ -83,6 +83,7 @@ const SuikaGame = () => {
       const bestScore = localStorage.getItem('bestScore') || 0;
       if (score > Number(bestScore)) {
         localStorage.setItem('bestScore', score.toString());
+        setBestScore(score);
       }
     }
   }, [isGameOver, score]);

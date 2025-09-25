@@ -129,9 +129,16 @@ const createFixedItem = (propsRef: React.RefObject<UseMatterJSProps>) => {
 
 const handleGameOver = (propsRef: React.RefObject<UseMatterJSProps>) => {
   if (!propsRef.current) return;
-  if (propsRef.current.isGameOver) return; // 이미 게임오버 상태면 중복 처리 방지
+  if (propsRef.current.isGameOver) return;
+  
+  console.log('Game Over triggered!'); // 디버깅용
   propsRef.current.setIsGameOver(true);
-  requestAnimation && cancelAnimationFrame(requestAnimation);
+  
+  // 애니메이션 정리
+  if (requestAnimation) {
+    cancelAnimationFrame(requestAnimation);
+    requestAnimation = null;
+  }
 }
 
 const clamp = (value: number, min: number, max: number) => {
@@ -239,11 +246,20 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
       const bodyA = pair.bodyA;
       const bodyB = pair.bodyB;
       
-      // 게임오버 체크 - 이미 게임오버 상태이거나 흔들기 중이면 무시
-      if ((bodyA.label === GameOverLine.label || bodyB.label === GameOverLine.label) && 
-          !isShakeItemActive && 
-          propsRef.current && 
-          !propsRef.current.isGameOver) {
+      // 게임오버 체크
+      if ((bodyA.label === GameOverLine.label || bodyB.label === GameOverLine.label)) {
+        // 흔들기 중이거나 이미 게임오버 상태면 무시
+        if (isShakeItemActive || !propsRef.current || propsRef.current.isGameOver) {
+          return;
+        }
+        
+        // 센서나 고정 아이템과의 충돌은 무시
+        const otherBody = bodyA.label === GameOverLine.label ? bodyB : bodyA;
+        if (otherBody.isStatic || otherBody.isSensor) {
+          return;
+        }
+        
+        console.log('Game over collision detected with:', otherBody.label);
         handleGameOver(propsRef);
         return;
       }
@@ -365,6 +381,13 @@ const useMatterJS = (props: UseMatterJSProps) => {
   const clear = () => {
     fixedItem = null;
     isShakeItemActive = false;
+    
+    // 기존 애니메이션 정리
+    if (requestAnimation) {
+      cancelAnimationFrame(requestAnimation);
+      requestAnimation = null;
+    }
+    
     engine = Engine.create();
     init(propsRef);
     event(propsRef, { fireConfetti, fireRapidStarConfetti });
