@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 
 const useConfetti = () => {
   const fireConfetti = useCallback(() => {
-    const count = 150; // 파티클 수 증가
+    const count = 100;
     const defaults = {
       origin: { y: 0.7 },
     };
@@ -20,20 +20,13 @@ const useConfetti = () => {
       spread: 90,
       startVelocity: 45,
       decay: 0.9,
-      scalar: 1.1, // 크기 증가
+      scalar: 0.9,
     });
     fire(0.3, {
       spread: 90,
       startVelocity: 35,
       decay: 0.85,
-      scalar: 1.3, // 크기 증가
-    });
-    fire(0.2, {
-      spread: 120,
-      startVelocity: 25,
-      decay: 0.8,
-      scalar: 0.8,
-      colors: ['#FFD700', '#FFA500', '#FF6347']
+      scalar: 1.1,
     });
   }, []);
 

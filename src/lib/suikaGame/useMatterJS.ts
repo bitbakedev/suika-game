@@ -265,7 +265,7 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
           canvasWrap.classList.add('merging');
           setTimeout(() => {
             canvasWrap.classList.remove('merging');
-          }, 300);
+          }, 500);
         }
         
         // 과일이 합쳐질 때 사운드 효과
@@ -284,34 +284,10 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
         
         // 일반 합치기 효과 (작은 폭죽)
         if(labelA !== Fruit.MELON) {
-          // 작은 폭죽 효과
-          const miniConfetti = () => {
-            const count = 30;
-            const defaults = {
-              origin: { x: midX / getRenderWidth(), y: midY / getRenderHeight() },
-            };
-            
-            function fire(particleRatio: number, opts: any) {
-              (window as any).confetti({
-                ...defaults,
-                ...opts,
-                particleCount: Math.floor(count * particleRatio),
-              });
-            }
-            
-            fire(0.6, {
-              spread: 60,
-              startVelocity: 30,
-              decay: 0.9,
-              scalar: 0.7,
-              colors: ['#FFD700', '#FFA500', '#FF69B4']
-            });
-          };
-          
-          // confetti 라이브러리가 로드되어 있는지 확인
-          if (typeof (window as any).confetti !== 'undefined') {
-            miniConfetti();
-          }
+          // 작은 폭죽 효과 - useConfetti 훅 사용
+          setTimeout(() => {
+            effects.fireConfetti();
+          }, 100);
         }
         
         // 수박끼리 합쳐지면 더 이상 진행하지 않음
