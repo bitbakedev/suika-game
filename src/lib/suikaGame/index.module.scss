@@ -300,6 +300,40 @@
   }
 }
 
+@keyframes mergeExplosion {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes mergeParticle {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--end-x), var(--end-y)) scale(0);
+    opacity: 0;
+  }
+}
+
+.merge-effect {
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+.merge-particle {
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
 .canvasWrap canvas {
   border: none;
   border-radius: 18px;

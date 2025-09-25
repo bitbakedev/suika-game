@@ -259,14 +259,8 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
       if (labelA === labelB) {
         prevMergingFruitIds = [bodyA.id, bodyB.id];
         
-        // 캔버스 진동 효과 추가
-        const canvasWrap = document.getElementById('canvasWrap');
-        if (canvasWrap) {
-          canvasWrap.classList.add('merging');
-          setTimeout(() => {
-            canvasWrap.classList.remove('merging');
-          }, 500);
-        }
+        // 합쳐지는 위치에 애니메이션 효과 추가
+        createMergeEffect(midX, midY);
         
         // 과일이 합쳐질 때 사운드 효과
         const popSound = new Audio(require('../../resource/pop2.mp3'));
@@ -281,14 +275,6 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
         
         // 수박이 만들어지면 별 이펙트
         if(labelA === Fruit.MELON) effects.fireRapidStarConfetti();
-        
-        // 일반 합치기 효과 (작은 폭죽)
-        if(labelA !== Fruit.MELON) {
-          // 작은 폭죽 효과 - useConfetti 훅 사용
-          setTimeout(() => {
-            effects.fireConfetti();
-          }, 100);
-        }
         
         // 수박끼리 합쳐지면 더 이상 진행하지 않음
         if (!feature) return;
@@ -343,6 +329,84 @@ const run = () => {
   if (!render) return;
   animate(0); // 시작할 때 시간을 0으로 초기화
   Render.run(render);
+};
+
+// 합쳐지는 위치에 애니메이션 효과 생성
+const createMergeEffect = (x: number, y: number) => {
+  const canvasWrap = document.getElementById('canvasWrap');
+  if (!canvasWrap) return;
+
+  // 캔버스의 실제 위치와 크기 계산
+  const canvasRect = canvasWrap.getBoundingClientRect();
+  const scaleX = canvasRect.width / getRenderWidth();
+  const scaleY = canvasRect.height / getRenderHeight();
+  
+  // 게임 좌표를 화면 좌표로 변환
+  const screenX = x * scaleX;
+  const screenY = y * scaleY;
+
+  // 애니메이션 요소 생성
+  const effect = document.createElement('div');
+  effect.className = 'merge-effect';
+  effect.style.cssText = `
+    position: absolute;
+    left: ${screenX}px;
+    top: ${screenY}px;
+    width: 60px;
+    height: 60px;
+    margin-left: -30px;
+    margin-top: -30px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,215,0,0.8) 0%, rgba(255,165,0,0.6) 50%, transparent 100%);
+    pointer-events: none;
+    z-index: 1000;
+    animation: mergeExplosion 0.6s ease-out forwards;
+  `;
+
+  canvasWrap.appendChild(effect);
+
+  // 파티클 효과 추가
+  for (let i = 0; i < 8; i++) {
+    const particle = document.createElement('div');
+    const angle = (i / 8) * Math.PI * 2;
+    const distance = 40 + Math.random() * 20;
+    const endX = Math.cos(angle) * distance;
+    const endY = Math.sin(angle) * distance;
+    
+    particle.className = 'merge-particle';
+    particle.style.cssText = `
+      position: absolute;
+      left: ${screenX}px;
+      top: ${screenY}px;
+      width: 8px;
+      height: 8px;
+      margin-left: -4px;
+      margin-top: -4px;
+      border-radius: 50%;
+      background: ${['#FFD700', '#FFA500', '#FF6347', '#FF69B4'][Math.floor(Math.random() * 4)]};
+      pointer-events: none;
+      z-index: 999;
+      animation: mergeParticle 0.8s ease-out forwards;
+      --end-x: ${endX}px;
+      --end-y: ${endY}px;
+    `;
+    
+    canvasWrap.appendChild(particle);
+    
+    // 파티클 제거
+    setTimeout(() => {
+      if (particle.parentNode) {
+        particle.parentNode.removeChild(particle);
+      }
+    }, 800);
+  }
+
+  // 메인 효과 제거
+  setTimeout(() => {
+    if (effect.parentNode) {
+      effect.parentNode.removeChild(effect);
+    }
+  }, 600);
 };
 
 interface UseMatterJSProps {
