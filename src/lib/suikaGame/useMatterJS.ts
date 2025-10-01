@@ -58,6 +58,7 @@ let prevMergingFruitIds: number[] = [];
 let isShakeItemActive: boolean = false;
 let isDangerZone: boolean = false;
 let lastDroppedItemId: number | null = null;
+let gameOverCheckTimeout: NodeJS.Timeout | null = null;
 
 const renderOptions = {
   width: getRenderWidth(),
@@ -263,22 +264,8 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
       const bodyB = pair.bodyB;
       
       // 게임오버 체크
-      if ((bodyA.label === GameOverGuideLine.label || bodyB.label === GameOverGuideLine.label)) {
-        // 흔들기 중이거나 이미 게임오버 상태면 무시
-        if (isShakeItemActive || !propsRef.current || propsRef.current.isGameOver) {
-          return;
-        }
-        
-        // 센서나 고정 아이템과의 충돌은 무시
-        const otherBody = bodyA.label === GameOverGuideLine.label ? bodyB : bodyA;
-        if (otherBody.isStatic || otherBody.isSensor) {
-          return;
-        }
-        
-        console.log('Game over collision detected with:', otherBody.label, 'at guide line');
-        handleGameOver(propsRef);
-        return;
-      }
+      // 게임오버 체크는 별도 함수에서 처리
+      scheduleGameOverCheck(propsRef);
 
       const midX = (bodyA.position.x + bodyB.position.x) / 2;
       const midY = (bodyA.position.y + bodyB.position.y) / 2;
@@ -354,6 +341,42 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
   // World.add(engine.world, mouseConstraint);
 };
 
+const scheduleGameOverCheck = (propsRef: React.RefObject<UseMatterJSProps>) => {
+  // 기존 타이머가 있으면 취소
+  if (gameOverCheckTimeout) {
+    clearTimeout(gameOverCheckTimeout);
+  }
+  
+  // 과일들이 안정될 시간을 주고 게임오버 체크
+  gameOverCheckTimeout = setTimeout(() => {
+    checkGameOverCondition(propsRef);
+  }, 1000); // 1초 후 체크
+};
+
+const checkGameOverCondition = (propsRef: React.RefObject<UseMatterJSProps>) => {
+  // 흔들기 중이거나 이미 게임오버 상태면 무시
+  if (isShakeItemActive || !propsRef.current || propsRef.current.isGameOver) {
+    return;
+  }
+  
+  const gameOverLineY = getRenderHeight() / 6.5; // 시각적 가이드 라인 Y 위치
+  
+  // 가이드라인 위에 있는 과일들 찾기
+  const fruitsAboveLine = engine.world.bodies.filter(body => {
+    const label = body.label as Fruit;
+    return Object.values(Fruit).includes(label as Fruit) && 
+           !body.isStatic && 
+           !body.isSensor && 
+           body.position.y < gameOverLineY + body.circleRadius; // 과일의 반지름까지 고려
+  });
+  
+  // 가이드라인 위에 과일이 있으면 게임오버
+  if (fruitsAboveLine.length > 0) {
+    console.log('Game over: fruits stacked above guide line', fruitsAboveLine.length);
+    handleGameOver(propsRef);
+  }
+};
+
 const animate = (currentTime: number) => {
   requestAnimation = requestAnimationFrame(animate);
 
@@ -407,6 +430,12 @@ const useMatterJS = (props: UseMatterJSProps) => {
     isShakeItemActive = false;
     isDangerZone = false;
     lastDroppedItemId = null;
+    
+    // 게임오버 체크 타이머 정리
+    if (gameOverCheckTimeout) {
+      clearTimeout(gameOverCheckTimeout);
+      gameOverCheckTimeout = null;
+    }
     
     // 기존 애니메이션 정리
     if (requestAnimation) {
