@@ -19,27 +19,27 @@ export type FruitType = keyof typeof Fruit;
 export const getFruitFeature = (fruit: FruitType) => {
   switch (fruit) {
     case Fruit.BLUEBERRY:
-      return { radius: getRenderWidth() / 20, mass: 1.2, label: Fruit.BLUEBERRY, score: 2 };
+      return { radius: getRenderWidth() / 16, mass: 1.2, label: Fruit.BLUEBERRY, score: 2 };
     case Fruit.STRAWBERRY:
-      return { radius: getRenderWidth() / 15, mass: 1, label: Fruit.STRAWBERRY, score: 4 };
+      return { radius: getRenderWidth() / 12, mass: 1, label: Fruit.STRAWBERRY, score: 4 };
     case Fruit.TANGERINE:
-      return { radius: getRenderWidth() / 10, mass: 1, label: Fruit.TANGERINE, score: 8 };
+      return { radius: getRenderWidth() / 8, mass: 1, label: Fruit.TANGERINE, score: 8 };
     case Fruit.TOMATO:
-      return { radius: getRenderWidth() / 8.5, mass: 1, label: Fruit.TOMATO, score: 16 };
+      return { radius: getRenderWidth() / 7, mass: 1, label: Fruit.TOMATO, score: 16 };
     case Fruit.AVOCADO:
-      return { radius: getRenderWidth() / 6.8, mass: 1, label: Fruit.AVOCADO, score: 32 };
+      return { radius: getRenderWidth() / 5.5, mass: 1, label: Fruit.AVOCADO, score: 32 };
     case Fruit.KOREANMELON:
-      return { radius: getRenderWidth() / 6, mass: 1, label: Fruit.KOREANMELON, score: 64 };
+      return { radius: getRenderWidth() / 4.8, mass: 1, label: Fruit.KOREANMELON, score: 64 };
     case Fruit.APPLE:
-      return { radius: getRenderWidth() / 5.2, mass: 1, label: Fruit.APPLE, score: 128 };
+      return { radius: getRenderWidth() / 4.2, mass: 1, label: Fruit.APPLE, score: 128 };
     case Fruit.PEACH:
-      return { radius: getRenderWidth() / 4.6, mass: 1, label: Fruit.PEACH, score: 256 };
+      return { radius: getRenderWidth() / 3.7, mass: 1, label: Fruit.PEACH, score: 256 };
     case Fruit.COCONUT:
-      return { radius: getRenderWidth() / 4, mass: 1, label: Fruit.COCONUT, score: 512 };
+      return { radius: getRenderWidth() / 3.2, mass: 1, label: Fruit.COCONUT, score: 512 };
     case Fruit.MELON:
-      return { radius: getRenderWidth() / 3.4, mass: 1, label: Fruit.MELON, score: 1024 };
+      return { radius: getRenderWidth() / 2.7, mass: 1, label: Fruit.MELON, score: 1024 };
     case Fruit.WATERMELON:
-      return { radius: getRenderWidth() / 3, mass: 1, label: Fruit.WATERMELON, score: 100 };
+      return { radius: getRenderWidth() / 2.4, mass: 1, label: Fruit.WATERMELON, score: 100 };
   }
 }
 
