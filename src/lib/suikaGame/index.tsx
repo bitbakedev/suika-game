@@ -28,6 +28,7 @@ const SuikaGame = () => {
   const [showRestartModal, setShowRestartModal] = useState<boolean>(false);
   const [lastMergedFruit, setLastMergedFruit] = useState<Fruit | null>(null);
   const [hasUsedRevive, setHasUsedRevive] = useState<boolean>(false);
+  const [isDangerMode, setIsDangerMode] = useState<boolean>(false);
 
   const getImageUrl = (fruit: Fruit) => {
     if (fruit === Fruit.BLUEBERRY) {
@@ -73,7 +74,8 @@ const SuikaGame = () => {
     setNextItem, 
     isGameOver, 
     setIsGameOver,
-    setLastMergedFruit
+    setLastMergedFruit,
+    setIsDangerMode
   });
 
   useEffect(() => {
@@ -102,6 +104,7 @@ const SuikaGame = () => {
     setIsShakeActive(false);
     setIsCanvasShaking(false);
     setHasUsedRevive(false);
+    setIsDangerMode(false);
     clear();
   }
 
@@ -177,7 +180,7 @@ const SuikaGame = () => {
   }
 
   return (
-    <div className={cx('gameArea')}>
+    <div className={cx('gameArea', { dangerMode: isDangerMode })}>
       <div className={cx('topArea')}>
         <div className={cx('leftSection')}>
           <div 

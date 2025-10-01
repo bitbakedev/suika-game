@@ -56,7 +56,7 @@ let prevPosition = { x: getRenderWidth() / 2, y: 50 };
 let nextFruit: Fruit | null = null;
 let prevMergingFruitIds: number[] = [];
 let isShakeItemActive: boolean = false;
-let isDangerZone: boolean = false;
+let dangerCheckTimeout: NodeJS.Timeout | null = null;
 let lastDroppedItemId: number | null = null;
 
 const renderOptions = {
@@ -252,6 +252,10 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
         dash.render.fillStyle = GuideLineColor;
       });
       World.add(engine.world, GameOverLine);
+      
+      // 위험 상황 체크
+      checkDangerZone(propsRef);
+      
       createFixedItem(propsRef);
     }, 750);
   });
@@ -341,6 +345,9 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
           propsRef.current.setScore(prev => prev + score);
           // 새로 생성된 과일을 프리뷰에 알림 (합쳐진 결과)
           propsRef.current.setLastMergedFruit(label);
+          
+          // 합쳐진 후 위험 상황 체크
+          setTimeout(() => checkDangerZone(propsRef), 500);
         }
         
         // 합쳐진 후 새로운 과일이 떨어뜨린 아이템이 됨
@@ -352,6 +359,42 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
   });
 
   // World.add(engine.world, mouseConstraint);
+};
+
+const checkDangerZone = (propsRef: React.RefObject<UseMatterJSProps>) => {
+  if (!propsRef.current || propsRef.current.isGameOver) return;
+  
+  // 기존 타이머 정리
+  if (dangerCheckTimeout) {
+    clearTimeout(dangerCheckTimeout);
+    dangerCheckTimeout = null;
+  }
+  
+  const gameOverLineY = getRenderHeight() / 6.5; // 시각적 가이드 라인 Y 좌표
+  
+  // 가이드라인 근처에 있는 과일들 찾기
+  const dangerousFruits = engine.world.bodies.filter(body => {
+    const label = body.label as Fruit;
+    if (!Object.values(Fruit).includes(label as Fruit) || body.isStatic || body.isSensor) {
+      return false;
+    }
+    
+    const fruitRadius = body.circleRadius || 0;
+    const fruitBottom = body.position.y + fruitRadius;
+    
+    // 가이드라인에 닿거나 넘은 과일들
+    return fruitBottom >= gameOverLineY - 5; // 5px 여유
+  });
+  
+  const isDangerous = dangerousFruits.length > 0;
+  propsRef.current.setIsDangerMode(isDangerous);
+  
+  // 위험 상황이면 지속적으로 체크
+  if (isDangerous) {
+    dangerCheckTimeout = setTimeout(() => {
+      checkDangerZone(propsRef);
+    }, 500);
+  }
 };
 
 const animate = (currentTime: number) => {
@@ -379,6 +422,7 @@ interface UseMatterJSProps {
   isGameOver: boolean;
   setIsGameOver: React.Dispatch<SetStateAction<boolean>>;
   setLastMergedFruit: React.Dispatch<SetStateAction<Fruit | null>>;
+  setIsDangerMode: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const useMatterJS = (props: UseMatterJSProps) => {
@@ -405,7 +449,10 @@ const useMatterJS = (props: UseMatterJSProps) => {
   const clear = () => {
     fixedItem = null;
     isShakeItemActive = false;
-    isDangerZone = false;
+    if (dangerCheckTimeout) {
+      clearTimeout(dangerCheckTimeout);
+      dangerCheckTimeout = null;
+    }
     lastDroppedItemId = null;
     
     // 기존 애니메이션 정리
