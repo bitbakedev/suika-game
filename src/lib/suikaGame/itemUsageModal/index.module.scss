@@ -214,10 +214,6 @@
   letter-spacing: 0.5px;
   position: relative;
   overflow: hidden;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   
   &::before {
     content: '';
@@ -278,7 +274,7 @@
   
   &:hover {
     background: linear-gradient(145deg, #FF7F7F, #FF6B6B);
-    transform: translateY(-3px);
+    transform: translateX(-50%) translateY(-3px);
     box-shadow: 
       0 8px 20px rgba(0, 0, 0, 0.3),
       0 4px 8px rgba(0, 0, 0, 0.2),
@@ -286,7 +282,7 @@
   }
   
   &:active {
-    transform: translateY(-1px);
+    transform: translateX(-50%) translateY(-1px);
     box-shadow: 
       0 4px 12px rgba(0, 0, 0, 0.25),
       0 2px 4px rgba(0, 0, 0, 0.15),
