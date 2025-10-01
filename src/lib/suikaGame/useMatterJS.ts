@@ -263,19 +263,19 @@ const event = (propsRef: React.RefObject<UseMatterJSProps>, effects: { fireConfe
       const bodyB = pair.bodyB;
       
       // 게임오버 체크
-      if ((bodyA.label === GameOverLine.label || bodyB.label === GameOverLine.label)) {
+      if ((bodyA.label === GameOverGuideLine.label || bodyB.label === GameOverGuideLine.label)) {
         // 흔들기 중이거나 이미 게임오버 상태면 무시
         if (isShakeItemActive || !propsRef.current || propsRef.current.isGameOver) {
           return;
         }
         
         // 센서나 고정 아이템과의 충돌은 무시
-        const otherBody = bodyA.label === GameOverLine.label ? bodyB : bodyA;
+        const otherBody = bodyA.label === GameOverGuideLine.label ? bodyB : bodyA;
         if (otherBody.isStatic || otherBody.isSensor) {
           return;
         }
         
-        console.log('Game over collision detected with:', otherBody.label, 'at canvas top');
+        console.log('Game over collision detected with:', otherBody.label, 'at guide line');
         handleGameOver(propsRef);
         return;
       }
@@ -447,7 +447,7 @@ const useMatterJS = (props: UseMatterJSProps) => {
     
     const bodiesToRemove = engine.world.bodies.filter(body => {
       const label = body.label as Fruit;
-      // 시각적 가이드 라인 위에 있는 과일들만 제거 (고정 아이템과 센서는 제외)
+      // 가이드 라인 위에 있는 과일들만 제거 (고정 아이템과 센서는 제외)
       return Object.values(Fruit).includes(label as Fruit) && 
              !body.isStatic && 
              !body.isSensor && 
