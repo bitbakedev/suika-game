@@ -290,38 +290,3 @@
   image-rendering: auto;
   image-rendering: -webkit-optimize-contrast;
 }
-
-.dangerMode {
-  .canvasWrap {
-    animation: dangerPulse 0.8s ease-in-out infinite alternate;
-    border: 3px solid #ff0000 !important;
-    box-shadow: 
-      0 0 20px rgba(255, 0, 0, 0.6),
-      0 4px 20px rgba(0, 0, 0, 0.15) !important;
-  }
-  
-  .topArea {
-    background: rgba(255, 0, 0, 0.2) !important;
-    animation: dangerFlash 1s ease-in-out infinite alternate;
-  }
-}
-
-@keyframes dangerPulse {
-  0% { 
-    transform: scale(1);
-    filter: brightness(1);
-  }
-  100% { 
-    transform: scale(1.02);
-    filter: brightness(1.1) hue-rotate(10deg);
-  }
-}
-
-@keyframes dangerFlash {
-  0% { 
-    background: rgba(255, 0, 0, 0.1);
-  }
-  100% { 
-    background: rgba(255, 0, 0, 0.3);
-  }
-}
